@@ -30,9 +30,20 @@ def main():
     ap.add_argument("--patience", type=int, default=20)
     ap.add_argument("--val-data", default=None,
                     help="opcjonalny data.yaml do finalnej ewaluacji (cross-domain)")
+    # --- augmentacje fotometryczne (Eksperyment A) ---
+    ap.add_argument("--hsv_h", type=float, default=None, help="HSV-Hue jitter (domyslnie YOLO 0.015)")
+    ap.add_argument("--hsv_s", type=float, default=None, help="HSV-Saturation jitter (domyslnie 0.7)")
+    ap.add_argument("--hsv_v", type=float, default=None, help="HSV-Value/brightness jitter (domyslnie 0.4)")
     args = ap.parse_args()
 
     from ultralytics import YOLO
+
+    # przekazywane do model.train tylko gdy podane (inaczej domyslne YOLO)
+    aug = {}
+    for k in ("hsv_h", "hsv_s", "hsv_v"):
+        v = getattr(args, k)
+        if v is not None:
+            aug[k] = v
 
     model = YOLO(args.model)
     model.train(
@@ -46,8 +57,7 @@ def main():
         project=str(ROOT / "runs"),
         name=args.name,
         exist_ok=True,
-        # augmentacje zostawiamy domyslne ultralytics dla baseline'u;
-        # warianty A/B/C beda nadpisywac konkretne flagi.
+        **aug,
     )
 
     # finalna ewaluacja: na wlasnym val albo na wskazanej domenie (cross-domain)
@@ -61,6 +71,7 @@ def main():
         "train_data": args.data,
         "eval_data": eval_data,
         "epochs": args.epochs, "imgsz": args.imgsz, "batch": args.batch, "seed": args.seed,
+        "augmentation": aug if aug else "default",
         "metrics": {
             "mAP50": float(metrics.box.map50),
             "mAP50-95": float(metrics.box.map),
