@@ -1,0 +1,27 @@
+# Dane (NIE commitujemy — CC BY-SA, duże pliki). Pobranie przez skrypty.
+data/
+*.tar.gz
+*.tar
+
+# Wyniki binarne / checkpointy
+*.pth
+*.pt
+*.onnx
+runs/
+wandb/
+checkpoints/
+
+# Wygenerowane artefakty (zostawiamy lekkie jsony/wykresy w results/ wg uznania)
+results/**/*.png
+results/**/*.npy
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# System / IDE
+.DS_Store
+*.swp

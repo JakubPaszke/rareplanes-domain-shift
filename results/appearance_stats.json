@@ -1,0 +1,28 @@
+{
+  "real": {
+    "domain": "real",
+    "n_images": 300,
+    "dir": "/home/jakub/Projekty/lotnicze/data/real/PS-RGB_tiled/PS-RGB_tiled",
+    "brightness_mean": 71.66481018066406,
+    "brightness_std": 34.40790557861328,
+    "saturation_mean": 0.3026128113269806,
+    "rgb_mean": {
+      "R": 82.27296852111816,
+      "G": 71.03140160878499,
+      "B": 61.690066477457684
+    }
+  },
+  "synthetic": {
+    "domain": "synthetic",
+    "n_images": 300,
+    "dir": "/home/jakub/Projekty/lotnicze/data/synthetic/images/train",
+    "brightness_mean": 132.99815368652344,
+    "brightness_std": 31.24083137512207,
+    "saturation_mean": 0.12191014736890793,
+    "rgb_mean": {
+      "R": 129.25836732228598,
+      "G": 130.8201173019409,
+      "B": 138.91598565419514
+    }
+  }
+}

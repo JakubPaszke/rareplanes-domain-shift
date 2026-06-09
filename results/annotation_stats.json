@@ -1,0 +1,130 @@
+{
+  "real_train_aircraft": {
+    "name": "REAL train (aircraft, 1 klasa)",
+    "n_img": 5815,
+    "n_ann": 18393,
+    "empty_imgs": 0,
+    "dens_mean": 3.1630266552020636,
+    "dens_median": 2.0,
+    "w_mean": 57.821709366363386,
+    "h_mean": 45.64610725981472,
+    "area_median": 1180.21114524002,
+    "buckets": {
+      "large": 2235,
+      "medium": 8096,
+      "small": 8062
+    }
+  },
+  "real_train_role": {
+    "name": "REAL train (role, 3 klasy)",
+    "n_img": 5567,
+    "n_ann": 17635,
+    "empty_imgs": 0,
+    "dens_mean": 3.1677743847673794,
+    "dens_median": 2.0,
+    "w_mean": 57.68664256978915,
+    "h_mean": 45.440400502126934,
+    "area_median": 1165.354399632874,
+    "buckets": {
+      "large": 2148,
+      "medium": 7673,
+      "small": 7814
+    }
+  },
+  "real_test_aircraft": {
+    "name": "REAL test (aircraft, 1 klasa)",
+    "n_img": 2710,
+    "n_ann": 6812,
+    "empty_imgs": 0,
+    "dens_mean": 2.5136531365313655,
+    "dens_median": 2.0,
+    "w_mean": 77.86490715914775,
+    "h_mean": 59.07320794058855,
+    "area_median": 2505.3804788006796,
+    "buckets": {
+      "medium": 3484,
+      "large": 1630,
+      "small": 1698
+    }
+  },
+  "real_test_role": {
+    "name": "REAL test (role, 3 klasy)",
+    "n_img": 2550,
+    "n_ann": 6329,
+    "empty_imgs": 0,
+    "dens_mean": 2.4819607843137255,
+    "dens_median": 1.0,
+    "w_mean": 78.76791067683757,
+    "h_mean": 59.45442631807987,
+    "area_median": 2482.1411219913425,
+    "buckets": {
+      "medium": 3158,
+      "large": 1573,
+      "small": 1598
+    }
+  },
+  "syn_train_aircraft": {
+    "name": "SYNTHETIC train (aircraft, 1 klasa)",
+    "n_img": 45000,
+    "n_ann": 566143,
+    "empty_imgs": 0,
+    "dens_mean": 12.580955555555555,
+    "dens_median": 11.0,
+    "w_mean": 97.55009776681862,
+    "h_mean": 88.9566152014597,
+    "area_median": 6776.0,
+    "buckets": {
+      "medium": 290383,
+      "large": 218018,
+      "small": 57742
+    }
+  },
+  "syn_train_role": {
+    "name": "SYNTHETIC train (role, 3 klasy)",
+    "n_img": 45000,
+    "n_ann": 566143,
+    "empty_imgs": 0,
+    "dens_mean": 12.580955555555555,
+    "dens_median": 11.0,
+    "w_mean": 97.55009776681862,
+    "h_mean": 88.9566152014597,
+    "area_median": 6776.0,
+    "buckets": {
+      "medium": 290383,
+      "large": 218018,
+      "small": 57742
+    }
+  },
+  "syn_test_aircraft": {
+    "name": "SYNTHETIC test (aircraft, 1 klasa)",
+    "n_img": 5000,
+    "n_ann": 62841,
+    "empty_imgs": 0,
+    "dens_mean": 12.5682,
+    "dens_median": 11.0,
+    "w_mean": 97.1172960328448,
+    "h_mean": 88.43767603952833,
+    "area_median": 6675.0,
+    "buckets": {
+      "medium": 32572,
+      "large": 23897,
+      "small": 6372
+    }
+  },
+  "syn_test_role": {
+    "name": "SYNTHETIC test (role, 3 klasy)",
+    "n_img": 5000,
+    "n_ann": 62841,
+    "empty_imgs": 0,
+    "dens_mean": 12.5682,
+    "dens_median": 11.0,
+    "w_mean": 97.1172960328448,
+    "h_mean": 88.43767603952833,
+    "area_median": 6675.0,
+    "buckets": {
+      "medium": 32572,
+      "large": 23897,
+      "small": 6372
+    }
+  }
+}

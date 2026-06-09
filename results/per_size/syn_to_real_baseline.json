@@ -1,0 +1,21 @@
+{
+  "name": "syn_to_real_baseline",
+  "weights": "runs/syn_baseline_yolov10n/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 91490,
+  "metrics": {
+    "AP@[.5:.95]": 0.23880644632502998,
+    "AP@.5": 0.40951946785272786,
+    "AP@.75": 0.2521882499922992,
+    "AP_small": 0.26236090243835225,
+    "AP_medium": 0.3283603493943937,
+    "AP_large": 0.0671489628665394,
+    "AR@1": 0.11237522019964767,
+    "AR@10": 0.3043452730475631,
+    "AR@100": 0.3685554903112155,
+    "AR_small": 0.49994110718492346,
+    "AR_medium": 0.44250861079219284,
+    "AR_large": 0.07361963190184048
+  }
+}

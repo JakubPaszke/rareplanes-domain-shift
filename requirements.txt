@@ -1,0 +1,14 @@
+# Analiza danych
+numpy==2.4.3
+pandas==2.3.2
+matplotlib==3.10.8
+pillow==12.1.1
+
+# Deep learning (CUDA 12.8 build)
+torch==2.9.0+cu128
+torchvision==0.24.0+cu128
+
+# Detekcja / COCO (dodawane na etapie treningu)
+# pycocotools
+# ultralytics        # YOLOv10
+# (RT-DETR / D-FINE / Detectron2 wg wybranych architektur)

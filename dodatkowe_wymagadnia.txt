@@ -1,0 +1,13 @@
+pobraźć zbiór danych RarePlanes + analiza manulana 
+- sprawdzić boxy, semnantyczne dane
+- jest to zbiór danych zawierające synteteyczne i realne
+- porównanie dlaczego trenowanie na syntetycznych danych jest gorsze niż na realnych
+- TWORZYMY BASELINE NA DANYCH RZECZYWISTYCH + OPIS W ARTYKULE (NP O YLOLO, DEADEAR >0.95)
+- tworzymy drugi baseline na danych syntetycznych i testujemy na rzeczywistych (spadną wyniki bardzo mocno)
+- zadaniem jest sukcesywnie poprawić tę różnicę i zrozumieć na czym to polego
+- sprawdzić jaka augemntacja nam pomorze
+- color histogram można arobić, transformację furriera, szereg analitycznych narzędzi żeby sprawdzić rozkład obrazów syntetycznych a realnych
+
+- potok intelektualny pokazujący wdrażaną strategię jak można ulepszyć model trenowany na danych syntetycbych ( stawiamy kilka hipotez i je testujemy eksperymentami A1, B2, C3 itd. i na końu ewaliacja tych eksperymentów ) i podsumowanie.
+
+NAJWAŻNIEJSZE: proces próby ulepszenia modelu i jakie rzeczy są w stanie nam pomóc poprawić ten model

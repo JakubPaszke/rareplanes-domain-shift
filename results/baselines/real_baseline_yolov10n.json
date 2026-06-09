@@ -1,0 +1,15 @@
+{
+  "name": "real_baseline_yolov10n",
+  "train_data": "data/yolo/real_aircraft/data.yaml",
+  "eval_data": "data/yolo/real_aircraft/data.yaml",
+  "epochs": 100,
+  "imgsz": 512,
+  "batch": 64,
+  "seed": 42,
+  "metrics": {
+    "mAP50": 0.9798319054055593,
+    "mAP50-95": 0.8127410281917038,
+    "precision": 0.9627555556074215,
+    "recall": 0.9487668819729889
+  }
+}
