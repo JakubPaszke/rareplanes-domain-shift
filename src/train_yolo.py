@@ -36,6 +36,11 @@ def main():
     ap.add_argument("--hsv_h", type=float, default=None, help="HSV-Hue jitter (domyslnie YOLO 0.015)")
     ap.add_argument("--hsv_s", type=float, default=None, help="HSV-Saturation jitter (domyslnie 0.7)")
     ap.add_argument("--hsv_v", type=float, default=None, help="HSV-Value/brightness jitter (domyslnie 0.4)")
+    # --- optymalizator / lr (RT-DETR wymaga jawnego lr ~1e-4, inaczej rozbieznosc do nan) ---
+    ap.add_argument("--lr0", type=float, default=None, help="poczatkowy lr (RT-DETR: 1e-4)")
+    ap.add_argument("--optimizer", default=None, help="auto/SGD/AdamW (RT-DETR: AdamW)")
+    ap.add_argument("--cos_lr", action="store_true", help="cosine LR schedule (zalecane dla RT-DETR)")
+    ap.add_argument("--warmup_epochs", type=float, default=None, help="epoki rozgrzewki (RT-DETR: 5)")
     args = ap.parse_args()
 
     from ultralytics import YOLO
@@ -46,6 +51,15 @@ def main():
         v = getattr(args, k)
         if v is not None:
             aug[k] = v
+    # hiperparametry optymalizatora (jawne -> stabilny trening RT-DETR)
+    if args.lr0 is not None:
+        aug["lr0"] = args.lr0
+    if args.optimizer is not None:
+        aug["optimizer"] = args.optimizer
+    if args.cos_lr:
+        aug["cos_lr"] = True
+    if args.warmup_epochs is not None:
+        aug["warmup_epochs"] = args.warmup_epochs
 
     model = YOLO(args.model)
     model.train(
