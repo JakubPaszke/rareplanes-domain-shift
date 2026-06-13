@@ -1,0 +1,20 @@
+{
+  "name": "expA3_strong_10k",
+  "train_data": "data/yolo/synthetic_10k/data.yaml",
+  "eval_data": "data/yolo/synthetic_10k/data.yaml",
+  "epochs": 60,
+  "imgsz": 512,
+  "batch": 64,
+  "seed": 42,
+  "augmentation": {
+    "hsv_h": 0.015,
+    "hsv_s": 0.9,
+    "hsv_v": 0.7
+  },
+  "metrics": {
+    "mAP50": 0.9719907778462148,
+    "mAP50-95": 0.8053903662456801,
+    "precision": 0.9666081069026695,
+    "recall": 0.9303079256841774
+  }
+}

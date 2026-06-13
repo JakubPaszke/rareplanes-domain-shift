@@ -28,6 +28,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--device", default="0")
     ap.add_argument("--patience", type=int, default=20)
+    ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--cache", default=None, help="None/disk/ram — cache zdekodowanych obrazow")
     ap.add_argument("--val-data", default=None,
                     help="opcjonalny data.yaml do finalnej ewaluacji (cross-domain)")
     # --- augmentacje fotometryczne (Eksperyment A) ---
@@ -54,17 +56,21 @@ def main():
         seed=args.seed,
         device=args.device,
         patience=args.patience,
+        workers=args.workers,
+        cache=args.cache,
         project=str(ROOT / "runs"),
         name=args.name,
         exist_ok=True,
         **aug,
     )
 
-    # finalna ewaluacja: na wlasnym val albo na wskazanej domenie (cross-domain)
+    # finalna ewaluacja: na wlasnym val albo na wskazanej domenie (cross-domain).
+    # split=test tylko gdy data.yaml go definiuje (podzbiory sweepow maja tylko val).
     eval_data = args.val_data or args.data
+    eval_split = "test" if "test:" in Path(eval_data).read_text() else "val"
     metrics = model.val(data=eval_data, imgsz=args.imgsz, device=args.device,
                         project=str(ROOT / "runs"), name=f"{args.name}_eval",
-                        exist_ok=True, split="test")
+                        exist_ok=True, split=eval_split)
 
     out = {
         "name": args.name,

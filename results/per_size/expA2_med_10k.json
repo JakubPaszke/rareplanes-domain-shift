@@ -1,0 +1,21 @@
+{
+  "name": "expA2_med_10k",
+  "weights": "runs/expA2_med_10k/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 86672,
+  "metrics": {
+    "AP@[.5:.95]": 0.24697953347124613,
+    "AP@.5": 0.4308208120151826,
+    "AP@.75": 0.2535651652651648,
+    "AP_small": 0.26491111892845964,
+    "AP_medium": 0.3448257719683235,
+    "AP_large": 0.09857677312957656,
+    "AR@1": 0.11823253082795068,
+    "AR@10": 0.32149148561362295,
+    "AR@100": 0.3927480916030534,
+    "AR_small": 0.5217903415783274,
+    "AR_medium": 0.4608495981630309,
+    "AR_large": 0.11276073619631902
+  }
+}
