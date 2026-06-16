@@ -28,3 +28,5 @@ venv/
 
 # Harness Claude Code (lokalne, nie commitowac)
 .claude/
+
+context/
