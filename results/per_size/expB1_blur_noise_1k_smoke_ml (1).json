@@ -1,0 +1,21 @@
+{
+  "name": "expB1_blur_noise_1k_smoke_ml",
+  "weights": "runs/expB1_blur_noise_1k_smoke_ml/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 813000,
+  "metrics": {
+    "AP@[.5:.95]": 0.21463932796036223,
+    "AP@.5": 0.40186658097947425,
+    "AP@.75": 0.20805365266602863,
+    "AP_small": 0.2997930907508999,
+    "AP_medium": 0.2726920404774927,
+    "AP_large": 0.04142809781499938,
+    "AR@1": 0.10305343511450385,
+    "AR@10": 0.344113329418673,
+    "AR@100": 0.46579565472695245,
+    "AR_small": 0.5475265017667844,
+    "AR_medium": 0.5272388059701493,
+    "AR_large": 0.2493251533742331
+  }
+}
