@@ -81,6 +81,7 @@ def process_split(split, src, dst, args, rng):
     src_img_dir = src / "images" / split
     src_lbl_dir = src / "labels" / split
     if not src_img_dir.is_dir():
+        print(f"[{split}] pomijam: brak katalogu {src_img_dir}", flush=True)
         return 0
 
     dst_img_dir = dst / "images" / split
@@ -89,6 +90,7 @@ def process_split(split, src, dst, args, rng):
     dst_lbl_dir.mkdir(parents=True, exist_ok=True)
 
     files = sorted(src_img_dir.glob("*.png"))
+    print(f"[{split}] degradacja obrazow: {len(files)} -> {dst_img_dir}", flush=True)
     for i, img_path in enumerate(files, start=1):
         out_img = dst_img_dir / img_path.name
         degraded = degrade_image(img_path, args, rng)
@@ -98,8 +100,8 @@ def process_split(split, src, dst, args, rng):
         dst_label = dst_lbl_dir / f"{img_path.stem}.txt"
         link_label(src_label, dst_label)
 
-        if i % 1000 == 0:
-            print(f"[{split}] {i}/{len(files)}")
+        if i % 250 == 0 or i == len(files):
+            print(f"[{split}] {i}/{len(files)}", flush=True)
     return len(files)
 
 
@@ -149,6 +151,13 @@ def main():
 
     rng = random.Random(args.seed)
     counts = {}
+    print(f"[start] src={src}", flush=True)
+    print(f"[start] dst={dst}", flush=True)
+    print(
+        f"[start] blur_radius<={args.blur_radius} "
+        f"noise_sigma<={args.noise_sigma} jpeg_quality_min={args.jpeg_quality_min}",
+        flush=True,
+    )
     for split in args.splits:
         counts[split] = process_split(split, src, dst, args, rng)
 
