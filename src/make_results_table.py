@@ -17,7 +17,12 @@ ORDER = [
     ("expA2_med_10k",          "Eksp A: sredni HSV (10k)"),
     ("expA3_strong_10k",       "Eksp A: mocny HSV (10k)"),
     ("expA_final_45k",         "Eksp A: slaby HSV (45k, finalny)"),
-    ("rtdetr_l_10k_ml",        "Arch: RT-DETR-l (10k, 60ep stabilny)"),
+    ("yolo11l_10k_ml",         "Arch: YOLO11l CNN duzy (10k)"),
+    ("rtdetr_l_10k_ml",        "Arch: RT-DETR-l Transf maly (10k)"),
+    ("rtdetrx_10k_ml",         "Arch: RT-DETR-x Transf duzy (10k)"),
+    ("expD_320_10k_ml",        "Eksp D: imgsz 320 (10k)"),
+    ("expD_768_10k_ml",        "Eksp D: imgsz 768 (10k)"),
+    ("expD_1024_10k_ml",       "Eksp D: imgsz 1024 (10k)"),
 ]
 COLS = ["AP@.5", "AP@[.5:.95]", "AP_small", "AP_medium", "AP_large", "AR@100"]
 HDR = ["mAP@50", "mAP@50:95", "AP_S", "AP_M", "AP_L", "AR@100"]

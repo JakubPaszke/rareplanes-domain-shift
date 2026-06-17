@@ -1,0 +1,22 @@
+{
+  "name": "expD_1024_10k_ml",
+  "weights": "runs/expD_1024_10k/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 19948,
+  "note": "Odtworzone z output.txt (Colab). imgsz 1024, batch auto, 45 epok, synthetic 10k.",
+  "metrics": {
+    "AP@[.5:.95]": 0.1895,
+    "AP@.5": 0.3297,
+    "AP@.75": 0.2038,
+    "AP_small": 0.2222,
+    "AP_medium": 0.25,
+    "AP_large": 0.0474,
+    "AR@1": 0.0998,
+    "AR@10": 0.2478,
+    "AR@100": 0.2839,
+    "AR_small": 0.4137,
+    "AR_medium": 0.3316,
+    "AR_large": 0.0467
+  }
+}

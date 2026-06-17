@@ -1,59 +1,62 @@
-# Porównanie architektur pod domain shift: YOLOv10n vs RT-DETR-l
+# Porównanie architektur pod domain shift: CNN vs Transformer (kwadrat)
 
-> Oba trenowane na podzbiorze synthetic 10k (te same listy plików, 15 lotnisk),
-> ewaluacja cross-domain na realnym holdoucie (2710 obr). RT-DETR na Colab A100.
-> Wyniki: `results/per_size/{expA1_weak_10k,rtdetr_l_10k_ml}.json`.
+> Wszystkie trenowane na synthetic 10k (te same listy plików, 15 lotnisk),
+> ewaluacja cross-domain na realnym holdoucie (2710 obr). Transformery na Colab
+> (RTX PRO 6000 Blackwell / A100). Wyniki: `results/per_size/*.json`.
 
-## Wyniki (real test, 10k synthetic)
+## Kwadrat architektur — real test mAP@50
 
-| metryka | YOLOv10n | RT-DETR-l (stabilny 60ep) | komentarz |
-|---|---|---|---|
-| mAP@50 (**syn val**) | ~0.97 | **0.973** | oba uczą się synthetic perfekcyjnie |
-| **mAP@50 (real test)** | **0.459** | **0.297** | YOLO +0.162 — RT-DETR DUŻO gorszy transfer |
-| mAP@50:95 (real) | 0.264 | 0.158 | YOLO znacznie lepszy |
-| AP_small (real) | **0.306** | 0.146 | YOLO 2× lepszy |
-| AP_medium (real) | **0.357** | 0.230 | YOLO lepszy |
-| AP_large (real) | **0.091** | 0.081 | ≈remis |
-| parametry | 2.3 M | 31.9 M (14×) | |
-| detekcji/obraz (real) | ~9.5 | **300 (=max_det)** | ⚠️ RT-DETR zwraca WSZYSTKIE sloty |
+| | **mały** | **duży** |
+|---|---|---|
+| **CNN** | YOLOv10n (2.3M) **0.459** | YOLO11l (25M) **0.467** |
+| **Transformer** | RT-DETR-l (32M) **0.297** | RT-DETR-x (67M) **0.380** |
 
-## GŁÓWNY WNIOSEK (mocny, do raportu)
+### Pełne metryki (real test)
 
-> **Transformerowy detektor RT-DETR generalizuje cross-domain ZNACZNIE gorzej niż
-> konwolucyjny YOLOv10** mimo 14× większej pojemności. Oba uczą się domeny
-> syntetycznej niemal idealnie (mAP_syn ~0.97), ale na realnym teście RT-DETR
-> osiąga tylko 0.297 mAP@50 vs 0.459 dla YOLO — spadek o 35%.
+| model | typ | param | mAP@50 | mAP@50:95 | AP_S | AP_M | AP_L | det/obraz |
+|---|---|---|---|---|---|---|---|---|
+| YOLOv10n | CNN | 2.3M | 0.459 | 0.264 | 0.306 | 0.357 | 0.091 | ~27 |
+| YOLO11l | CNN | 25M | **0.467** | **0.271** | 0.306 | 0.348 | 0.108 | ~22 |
+| RT-DETR-l | Transf | 32M | 0.297 | 0.158 | 0.146 | 0.230 | 0.081 | **300** |
+| RT-DETR-x | Transf | 67M | 0.380 | 0.205 | 0.206 | 0.285 | 0.094 | **300** |
 
-### Mechanizm (analiza)
-1. **Overfitting do domeny źródłowej:** RT-DETR przy 60 epokach i lr=1e-4 dopasował
-   się do synthetic (0.973), ale to dopasowanie NIE transferuje. Im lepiej na
-   synthetic, tym gorzej na real — klasyczny domain overfit, silniejszy dla modelu
-   o większej pojemności.
-2. **Załamanie end2end bez NMS:** RT-DETR zwraca dokładnie 300 detekcji/obraz
-   (= max_det) na KAŻDYM realnym kaflu — czyli wszystkie zapytania dekodera z
-   niskim confidence. Na obcej domenie model nie ma pewnych detekcji, a brak
-   NMS/progu (architektura end2end) oznacza, że head wypluwa pełen zestaw słabych
-   predykcji. YOLO z NMS i progiem filtruje do ~9.5/obraz. To strukturalna różnica
-   w odporności na domain shift, nie tylko kwestia jakości.
+(syn val: wszystkie ~0.93-0.97 — każda architektura uczy się synthetic świetnie)
 
-### Uwaga o wyniku wstępnym
-Wcześniejszy „lepszy" RT-DETR (mAP 0.489) pochodził z best.pt po 2 epokach
-(trening rozbiegał się do nan przy auto-lr 0.002). Był to artefakt
-niedotrenowania — przypadkowo wyższy recall. Stabilny trening (lr=1e-4 +
-cosine + warmup, krzywa monotoniczna do 0.973 bez nan) ujawnia prawdziwy,
-gorszy wynik transferu. To pokazuje też, że **RT-DETR jest istotnie trudniejszy
-w treningu** (wymaga starannego strojenia lr) — realny koszt inżynierski.
+## GŁÓWNE WNIOSKI (do raportu)
 
-## Statementy do raportu
-1. Większy/transformerowy model ≠ lepszy transfer — RT-DETR przegrywa z YOLO na
-   realnej domenie mimo 14× parametrów. Pojemność sprzyja overfitowi do synthetic.
-2. Architektura end2end (brak NMS) załamuje się na domain shift przez zwracanie
-   wszystkich slotów dekodera — diagnostyczne 300 det/obraz.
-3. YOLO wygrywa szczególnie na małych obiektach (AP_small 2×), które dominują
-   w realnej domenie.
+**1. CNN transferują cross-domain ZNACZNIE lepiej niż transformery.**
+> Oba CNN-y (YOLOv10n, YOLO11l) osiągają ~0.46 mAP@50 na realnym teście, oba
+> transformery (RT-DETR-l/-x) wyraźnie mniej (0.30-0.38). Najlepszy CNN bije
+> najlepszy transformer o 23% (0.467 vs 0.380), mimo że transformery mają więcej
+> parametrów. Wszystkie uczą się synthetic niemal idealnie (~0.95+) — różnica
+> jest CZYSTO w generalizacji na obcą domenę.
 
-## TODO (gdy unity)
-- D-FINE jako trzecia architektura (czy inne transformery mają ten sam problem?).
-- FPS YOLO vs RT-DETR na TYM SAMYM sprzęcie (uczciwy ranking koszt-jakość).
-- (opcja) RT-DETR z mocniejszą regularyzacją / early stop wg REALNEGO val —
-   czy mniej epok = lepszy transfer? (hipoteza: tak, bo mniej overfitu).
+**2. Korekta hipotezy (uczciwie): pojemność transformera NIE szkodzi liniowo.**
+> Wstępna hipoteza brzmiała "większy transformer = większy overfit = gorszy transfer".
+> Wynik ją FALSYFIKUJE: RT-DETR-x (67M) transferuje LEPIEJ niż RT-DETR-l (32M) —
+> 0.380 vs 0.297. Większy transformer radzi sobie nieco lepiej, nie gorzej. Główna
+> teza (CNN > Transformer w transferze) stoi, ale mechanizm "im większy tym gorzej"
+> jest błędny. Analogicznie po stronie CNN: YOLO11l (25M) ≈ YOLOv10n (2.3M) — rozmiar
+> ma marginalny wpływ na transfer w obu rodzinach. **To architektura, nie pojemność,
+> decyduje o transferze.**
+
+**3. Strukturalne załamanie end2end (brak NMS) na domain shift.**
+> OBA transformery zwracają dokładnie 300 detekcji/obraz (= max_det) na realnym
+> teście — wszystkie zapytania dekodera z niskim confidence. Na obcej domenie model
+> nie ma pewnych detekcji, a architektura end2end (bez NMS/progu) wypluwa pełen
+> zestaw słabych predykcji. CNN-y z NMS filtrują do ~22-27/obraz. To strukturalna,
+> nie tylko jakościowa różnica w odporności na shift — i prawdopodobne źródło
+> niskiej precyzji transformerów cross-domain.
+
+**4. Małe obiekty: domena CNN.** AP_small CNN ~0.306 vs transformery 0.15-0.21.
+Realna domena to w 44% małe obiekty (notes/01) — stąd przewaga CNN w mAP@50.
+
+## Nota metodologiczna
+RT-DETR trudny w treningu: wymaga lr=1e-4 + cosine + warmup (auto-lr 0.002 → nan).
+Wstępny RT-DETR-l "0.489" był artefaktem niedotrenowania (ep.2) — po stabilizacji
+spadł do prawdziwych 0.297. To samo w sobie obserwacja: transformery wymagają
+więcej strojenia (koszt inżynierski w rankingu koszt-jakość).
+
+## TODO
+- FPS wszystkich 4 na TYM SAMYM sprzęcie (uczciwy ranking koszt-jakość; teraz YOLO@5070Ti, transf.@Blackwell).
+- (opcja) czy transformery z mocniejszym progiem confidence / NMS-postproc nadrabiają precyzję?

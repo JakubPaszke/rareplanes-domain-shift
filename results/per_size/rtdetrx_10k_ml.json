@@ -1,0 +1,21 @@
+{
+  "name": "rtdetrx_10k_ml",
+  "weights": "runs/rtdetrx_10k/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 813000,
+  "metrics": {
+    "AP@[.5:.95]": 0.20507506516722027,
+    "AP@.5": 0.3796247022748037,
+    "AP@.75": 0.1983804776335892,
+    "AP_small": 0.20579924727956744,
+    "AP_medium": 0.28485494656160565,
+    "AP_large": 0.09422167071873765,
+    "AR@1": 0.11396065766294775,
+    "AR@10": 0.28047563123899,
+    "AR@100": 0.37306224310041103,
+    "AR_small": 0.42279151943462906,
+    "AR_medium": 0.4260045924225029,
+    "AR_large": 0.20809815950920246
+  }
+}

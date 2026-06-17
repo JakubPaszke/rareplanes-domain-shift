@@ -1,0 +1,21 @@
+{
+  "name": "yolo11l_10k_ml",
+  "weights": "runs/yolo11l_10k/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 61235,
+  "metrics": {
+    "AP@[.5:.95]": 0.2708002940761567,
+    "AP@.5": 0.4670039106385736,
+    "AP@.75": 0.2871387648176351,
+    "AP_small": 0.3060902862082611,
+    "AP_medium": 0.34825521910908014,
+    "AP_large": 0.10812474771461425,
+    "AR@1": 0.12768643570170288,
+    "AR@10": 0.3318408690546095,
+    "AR@100": 0.39217557251908397,
+    "AR_small": 0.5265606595995289,
+    "AR_medium": 0.45258323765786457,
+    "AR_large": 0.12306748466257669
+  }
+}
