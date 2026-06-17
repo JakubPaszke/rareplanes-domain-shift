@@ -15,10 +15,11 @@ WORKERS="${WORKERS:-2}"
 DEVICE="${DEVICE:-0}"
 VARIANTS="${VARIANTS:-B1 B2 B3}"
 FREQ_PROB="${FREQ_PROB:-1.0}"
+MODEL="${MODEL:-yolov10n.pt}"
 
 echo "[sweep B onfly] SRC_DATASET=$SRC_DATASET DATASET_TAG=$DATASET_TAG"
 echo "[sweep B onfly] EPOCHS=$EPOCHS BATCH=$BATCH WORKERS=$WORKERS DEVICE=$DEVICE"
-echo "[sweep B onfly] VARIANTS=$VARIANTS FREQ_PROB=$FREQ_PROB"
+echo "[sweep B onfly] VARIANTS=$VARIANTS FREQ_PROB=$FREQ_PROB MODEL=$MODEL"
 
 has_variant() {
   case " ${VARIANTS} " in
@@ -37,6 +38,7 @@ run_variant() {
     --data "$SRC_DATASET/data.yaml" \
     --degrade-root "$SRC_DATASET/images/train" \
     --name "$run" \
+    --model "$MODEL" \
     --epochs "$EPOCHS" \
     --batch "$BATCH" \
     --imgsz 512 \

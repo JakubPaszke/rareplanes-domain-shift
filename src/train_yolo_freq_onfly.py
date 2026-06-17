@@ -96,7 +96,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True, help="data.yaml do treningu")
     ap.add_argument("--name", required=True, help="nazwa eksperymentu")
-    ap.add_argument("--model", default="models/yolov10n.pt")
+    ap.add_argument("--model", default="yolov10n.pt")
     ap.add_argument("--epochs", type=int, default=100)
     ap.add_argument("--imgsz", type=int, default=512)
     ap.add_argument("--batch", type=int, default=32)
