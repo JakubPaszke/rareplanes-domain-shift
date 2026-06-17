@@ -1,0 +1,22 @@
+{
+  "name": "expD_320_10k_ml",
+  "weights": "runs/expD_320_10k/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 146853,
+  "note": "Odtworzone z logu Colab (sesja padla przed auto-download). Trening: imgsz 320, batch auto=222, 45 epok, synthetic 10k, eval na realnym tescie.",
+  "metrics": {
+    "AP@[.5:.95]": 0.2828,
+    "AP@.5": 0.5224,
+    "AP@.75": 0.2755,
+    "AP_small": 0.3078,
+    "AP_medium": 0.3675,
+    "AP_large": 0.1511,
+    "AR@1": 0.1352,
+    "AR@10": 0.3619,
+    "AR@100": 0.4358,
+    "AR_small": 0.5124,
+    "AR_medium": 0.5224,
+    "AR_large": 0.1709
+  }
+}
