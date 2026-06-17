@@ -20,6 +20,9 @@ ORDER = [
     ("yolo11l_10k_ml",         "Arch: YOLO11l CNN duzy (10k)"),
     ("rtdetr_l_10k_ml",        "Arch: RT-DETR-l Transf maly (10k)"),
     ("rtdetrx_10k_ml",         "Arch: RT-DETR-x Transf duzy (10k)"),
+    ("expD_320_10k_ml",        "Eksp D: imgsz 320 (10k)"),
+    ("expD_768_10k_ml",        "Eksp D: imgsz 768 (10k)"),
+    ("expD_1024_10k_ml",       "Eksp D: imgsz 1024 (10k)"),
 ]
 COLS = ["AP@.5", "AP@[.5:.95]", "AP_small", "AP_medium", "AP_large", "AR@100"]
 HDR = ["mAP@50", "mAP@50:95", "AP_S", "AP_M", "AP_L", "AR@100"]
