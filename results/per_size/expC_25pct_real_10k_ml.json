@@ -1,0 +1,21 @@
+{
+  "name": "expC_25pct_real_10k_ml",
+  "weights": "runs/expC_25pct_real_10k_ml/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 56483,
+  "metrics": {
+    "AP@[.5:.95]": 0.7120271087490335,
+    "AP@.5": 0.9465769553819696,
+    "AP@.75": 0.84210936031103,
+    "AP_small": 0.6364900530746371,
+    "AP_medium": 0.697448578106969,
+    "AP_large": 0.8166136122161296,
+    "AR@1": 0.31379917792131534,
+    "AR@10": 0.7190399295361127,
+    "AR@100": 0.7822372284204345,
+    "AR_small": 0.7216136631330977,
+    "AR_medium": 0.7719575200918485,
+    "AR_large": 0.867361963190184
+  }
+}

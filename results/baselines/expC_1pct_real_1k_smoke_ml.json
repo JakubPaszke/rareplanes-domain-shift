@@ -1,0 +1,16 @@
+{
+  "name": "expC_1pct_real_1k_smoke_ml",
+  "train_data": "data/yolo/mixed_syn1k_smoke_real1pct/data.yaml",
+  "eval_data": "data/yolo/mixed_syn1k_smoke_real1pct/data.yaml",
+  "epochs": 3,
+  "imgsz": 512,
+  "batch": 32,
+  "seed": 42,
+  "augmentation": "default",
+  "metrics": {
+    "mAP50": 0.6990596416348276,
+    "mAP50-95": 0.4818976531465863,
+    "precision": 0.9236102403027726,
+    "recall": 0.30321659449314164
+  }
+}

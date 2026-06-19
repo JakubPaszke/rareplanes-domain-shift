@@ -1,0 +1,16 @@
+{
+  "name": "expC_25pct_real_10k_ml",
+  "train_data": "data/yolo/mixed_syn10k_real25pct/data.yaml",
+  "eval_data": "data/yolo/mixed_syn10k_real25pct/data.yaml",
+  "epochs": 30,
+  "imgsz": 512,
+  "batch": 32,
+  "seed": 42,
+  "augmentation": "default",
+  "metrics": {
+    "mAP50": 0.9695356075407777,
+    "mAP50-95": 0.7929233759896692,
+    "precision": 0.9670723194990167,
+    "recall": 0.9239310284768789
+  }
+}

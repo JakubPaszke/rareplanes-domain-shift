@@ -1,0 +1,576 @@
+HOST=g1n2.cluster.wmi.amu.edu.pl
+CUDA_VISIBLE_DEVICES=0
+Thu Jun 18 20:00:42 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        On  |   00000000:00:10.0 Off |                  Off |
+|  0%   30C    P8             27W /  450W |       1MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Python 3.12.13
+torch: 2.5.1+cu121 cuda: True
+
+==============================================================================
+[2026-06-18 20:00:54] START expC.py
+==============================================================================
+[2026-06-18 20:00:54] Created symlink: data -> /work/s473634/rareplanes-data/data
+
+==============================================================================
+[2026-06-18 20:00:54] Plan
+==============================================================================
+[2026-06-18 20:00:54] data_dir=/work/s473634/rareplanes-data/data
+[2026-06-18 20:00:54] smoke=True
+[2026-06-18 20:00:54] download_workers=32
+[2026-06-18 20:00:54] batch=32, workers=4, imgsz=512, device=0
+[2026-06-18 20:00:54] model=yolov10n.pt, seed=42
+[2026-06-18 20:00:54] skip_download=False, skip_prepare=False, prepare_only=False
+[2026-06-18 20:00:54] dry_run=False
+
+==============================================================================
+[2026-06-18 20:00:54] Downloading annotations
+==============================================================================
+[2026-06-18 20:00:54] [download] https://rareplanes-public.s3.amazonaws.com/real/metadata_annotations/instances_train_aircraft.json -> /work/s473634/rareplanes-data/data/real/annotations/instances_train_aircraft.json
+[2026-06-18 20:00:57] [download] https://rareplanes-public.s3.amazonaws.com/real/metadata_annotations/instances_test_aircraft.json -> /work/s473634/rareplanes-data/data/real/annotations/instances_test_aircraft.json
+[2026-06-18 20:00:58] [download] https://rareplanes-public.s3.amazonaws.com/synthetic/metadata_annotations/instances_train_aircraft.json -> /work/s473634/rareplanes-data/data/synthetic/annotations/instances_train_aircraft.json
+[2026-06-18 20:01:16] [download] https://rareplanes-public.s3.amazonaws.com/synthetic/metadata_annotations/instances_test_aircraft.json -> /work/s473634/rareplanes-data/data/synthetic/annotations/instances_test_aircraft.json
+
+==============================================================================
+[2026-06-18 20:01:19] Downloading/extracting real train+test tiles
+==============================================================================
+[2026-06-18 20:01:19] [download] https://rareplanes-public.s3.amazonaws.com/real/tarballs/train/RarePlanes_train_PS-RGB_tiled.tar.gz -> /work/s473634/rareplanes-data/data/real/tarballs/train.tar.gz
+[2026-06-18 20:04:22] [download] https://rareplanes-public.s3.amazonaws.com/real/tarballs/test/RarePlanes_test_PS-RGB_tiled.tar.gz -> /work/s473634/rareplanes-data/data/real/tarballs/test.tar.gz
+[2026-06-18 20:06:15] [extract] /work/s473634/rareplanes-data/data/real/tarballs/train.tar.gz -> /work/s473634/rareplanes-data/data/real/PS-RGB_tiled
+[2026-06-18 20:06:24] [extract] /work/s473634/rareplanes-data/data/real/tarballs/test.tar.gz -> /work/s473634/rareplanes-data/data/real/PS-RGB_tiled
+[2026-06-18 20:06:29] real tiles count=8525
+
+==============================================================================
+[2026-06-18 20:06:29] Downloading synthetic 10k images
+==============================================================================
+[2026-06-18 20:06:29] synthetic files to check/download=11764
+[2026-06-18 20:07:55] synthetic progress 1000/11764 ok=1000
+[2026-06-18 20:09:21] synthetic progress 2000/11764 ok=2000
+[2026-06-18 20:10:47] synthetic progress 3000/11764 ok=3000
+[2026-06-18 20:12:11] synthetic progress 4000/11764 ok=4000
+[2026-06-18 20:13:32] synthetic progress 5000/11764 ok=5000
+[2026-06-18 20:14:57] synthetic progress 6000/11764 ok=6000
+[2026-06-18 20:16:24] synthetic progress 7000/11764 ok=7000
+[2026-06-18 20:17:38] synthetic progress 8000/11764 ok=8000
+[2026-06-18 20:19:06] synthetic progress 9000/11764 ok=9000
+[2026-06-18 20:20:36] synthetic progress 10000/11764 ok=10000
+[2026-06-18 20:21:55] synthetic progress 11000/11764 ok=11000
+[2026-06-18 20:23:02] synthetic progress 11764/11764 ok=11764
+[2026-06-18 20:23:02] synthetic selected_ok=11764/11764 minimum=11646
+
+==============================================================================
+[2026-06-18 20:23:02] Preparing YOLO datasets
+==============================================================================
+[2026-06-18 20:23:02] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/coco_to_yolo.py --domain synthetic --classes aircraft --val-frac 0.15 --seed 42
+[synthetic/aircraft] train=10000 val=1764 test=0
+  klasy (1): ['aircraft']
+  -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_aircraft/data.yaml
+[2026-06-18 20:23:12] [cmd done] elapsed=10.3s
+[2026-06-18 20:23:12] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/coco_to_yolo.py --domain real --classes aircraft --val-frac 0.15 --seed 42
+[real/aircraft] train=4943 val=872 test=2710
+  klasy (1): ['aircraft']
+  -> /work/s473634/rareplanes-domain-shift/data/yolo/real_aircraft/data.yaml
+[2026-06-18 20:23:18] [cmd done] elapsed=5.6s
+[2026-06-18 20:23:18] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_subset.py --n-train 10000 --name synthetic_10k --seed 42
+[synthetic_10k] train=10000 val=1764 -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_10k/data.yaml
+rozklad lotnisk (train):
+   Atlanta_Airport         : 684
+   Munich_Airport          : 677
+   Newark_Airport          : 677
+   Miami_Airport           : 676
+   SaltLakeCity_Airport    : 676
+   HongKong_Airport        : 673
+   Zhukovsky_Airport       : 673
+   Oulu_Airport            : 672
+   Basel_Airport           : 672
+   Unalaska_Airport        : 670
+   Geneva_Airport          : 670
+   Chicago_Airport         : 669
+   SeoulIncheon_Airport    : 666
+   London_Airport          : 665
+   LosAngeles_Airport      : 580
+[2026-06-18 20:23:28] [cmd done] elapsed=10.1s
+[2026-06-18 20:23:28] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_subset.py --n-train 1000 --name synthetic_1k --seed 42
+[synthetic_1k] train=1000 val=176 -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_1k/data.yaml
+rozklad lotnisk (train):
+   Atlanta_Airport         : 68
+   SaltLakeCity_Airport    : 68
+   Newark_Airport          : 68
+   Munich_Airport          : 68
+   Miami_Airport           : 68
+   SeoulIncheon_Airport    : 67
+   Geneva_Airport          : 67
+   Basel_Airport           : 67
+   HongKong_Airport        : 67
+   Zhukovsky_Airport       : 67
+   Unalaska_Airport        : 67
+   Chicago_Airport         : 67
+   Oulu_Airport            : 67
+   London_Airport          : 66
+   LosAngeles_Airport      : 58
+[2026-06-18 20:23:29] [cmd done] elapsed=1.2s
+
+==============================================================================
+[2026-06-18 20:23:29] Running experiment C
+==============================================================================
+[2026-06-18 20:23:29] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/run_expC_mixed_cluster.py --src-dataset data/yolo/synthetic_1k --dataset-tag 1k_smoke --real-src data/yolo/real_aircraft --real-img-dir data/real/PS-RGB_tiled/PS-RGB_tiled --coco-gt data/real/annotations/instances_test_aircraft.json --pcts 1 --fracs 0.01 --epochs 3 --batch 32 --workers 4 --device 0 --imgsz 512 --model yolov10n.pt --patience 20
+
+==============================================================================
+[2026-06-18 20:23:29] START run_expC_mixed_cluster.py
+==============================================================================
+
+==============================================================================
+[2026-06-18 20:23:29] Plan eksperymentu C
+==============================================================================
+[2026-06-18 20:23:29] smoke=False
+[2026-06-18 20:23:29] src_dataset=data/yolo/synthetic_1k
+[2026-06-18 20:23:29] real_src=data/yolo/real_aircraft
+[2026-06-18 20:23:29] dataset_tag=1k_smoke
+[2026-06-18 20:23:29] pcts=1
+[2026-06-18 20:23:29] fracs=0.01
+[2026-06-18 20:23:29] model=yolov10n.pt
+[2026-06-18 20:23:29] epochs=3, batch=32, imgsz=512, workers=4, device=0, patience=20, seed=42
+[2026-06-18 20:23:29] skip_make=False, skip_train=False, skip_eval=False, dry_run=False
+[2026-06-18 20:23:29] C 1%: dataset=mixed_syn1k_smoke_real1pct, run=expC_1pct_real_1k_smoke_ml, real_frac=0.01
+
+==============================================================================
+[2026-06-18 20:23:29] Srodowisko
+==============================================================================
+[2026-06-18 20:23:29] cwd=/work/s473634/rareplanes-domain-shift
+[2026-06-18 20:23:29] python=/home/s473634/.conda/envs/rareplanes/bin/python
+[2026-06-18 20:23:29] python_version=3.12.13
+[2026-06-18 20:23:29] platform=Linux-6.8.0-124-generic-x86_64-with-glibc2.35
+[2026-06-18 20:23:29] SLURM_JOB_ID=71026
+[2026-06-18 20:23:29] CUDA_VISIBLE_DEVICES=0
+[2026-06-18 20:23:29] repo: . [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:29] src_dataset: data/yolo/synthetic_1k [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:29] real_src: data/yolo/real_aircraft [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:29] real_img_dir: data/real/PS-RGB_tiled/PS-RGB_tiled [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:29] coco_gt: data/real/annotations/instances_test_aircraft.json [file, exists=True, size=2.7 MB]
+[2026-06-18 20:23:29] runs_dir: runs [missing, exists=False]
+[2026-06-18 20:23:29] results_dir: results [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:29] nvidia-smi:
+NVIDIA GeForce RTX 4090, 24564 MiB, 24080 MiB
+[2026-06-18 20:23:29] torch/ultralytics:
+torch: OK
+ultralytics: OK
+cv2: OK
+numpy: OK
+pycocotools: OK
+torch.version=2.5.1+cu121
+cuda_available=True
+gpu=NVIDIA GeForce RTX 4090
+
+==============================================================================
+[2026-06-18 20:23:32] Sprawdzanie danych wejsciowych
+==============================================================================
+[2026-06-18 20:23:32] required: data/yolo/synthetic_1k/data.yaml [file, exists=True, size=0.0 MB]
+[2026-06-18 20:23:32] required: data/yolo/synthetic_1k/images/train [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:32] required: data/yolo/synthetic_1k/images/val [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:32] required: data/yolo/real_aircraft/data.yaml [file, exists=True, size=0.0 MB]
+[2026-06-18 20:23:32] required: data/yolo/real_aircraft/images/train [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:32] required: data/yolo/real_aircraft/images/val [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:32] required: data/real/PS-RGB_tiled/PS-RGB_tiled [dir, exists=True, disk_free=21292.6 GB, disk_total=41929.5 GB]
+[2026-06-18 20:23:32] required: data/real/annotations/instances_test_aircraft.json [file, exists=True, size=2.7 MB]
+[2026-06-18 20:23:32] synthetic train=1000, val=176
+[2026-06-18 20:23:32] real train=4943, val=872
+[2026-06-18 20:23:32] real eval images=8525
+[2026-06-18 20:23:32] Dane wejsciowe wygladaja OK.
+
+==============================================================================
+[2026-06-18 20:23:32] C 1%: tworzenie mixed dataset
+==============================================================================
+[2026-06-18 20:23:32] dataset=mixed_syn1k_smoke_real1pct
+[2026-06-18 20:23:32] real_frac=0.01
+[2026-06-18 20:23:32] synthetic_src=data/yolo/synthetic_1k
+[2026-06-18 20:23:32] real_src=data/yolo/real_aircraft
+[2026-06-18 20:23:32] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_mixed_dataset.py --syn-src data/yolo/synthetic_1k --real-src data/yolo/real_aircraft --name mixed_syn1k_smoke_real1pct --real-frac 0.01 --seed 42 --overwrite
+[zapisano] /work/s473634/rareplanes-domain-shift/data/yolo/mixed_syn1k_smoke_real1pct/data.yaml
+  train: synthetic=1000 real=49/4943
+  val: synthetic=176 real=9/872
+UWAGA: real test nie zostal dolaczony do datasetu mixed.
+[2026-06-18 20:23:33] [cmd done] czas=1.0s
+[2026-06-18 20:23:33] mixed dataset OK: data/yolo/mixed_syn1k_smoke_real1pct/data.yaml
+[2026-06-18 20:23:33] mixed train PNG=1049, val PNG=185
+
+==============================================================================
+[2026-06-18 20:23:33] C 1%: trening
+==============================================================================
+[2026-06-18 20:23:33] run_name=expC_1pct_real_1k_smoke_ml
+[2026-06-18 20:23:33] data=data/yolo/mixed_syn1k_smoke_real1pct/data.yaml
+[2026-06-18 20:23:33] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/train_yolo.py --data data/yolo/mixed_syn1k_smoke_real1pct/data.yaml --name expC_1pct_real_1k_smoke_ml --model yolov10n.pt --epochs 3 --batch 32 --imgsz 512 --seed 42 --device 0 --workers 4 --patience 20 --val-data data/yolo/mixed_syn1k_smoke_real1pct/data.yaml
+WARNING ⚠️ user config directory '/home/s473634/.config/Ultralytics' is not writable, using '/tmp/Ultralytics'. Set YOLO_CONFIG_DIR to override.
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/tmp/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+
+[KDownloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov10n.pt to 'yolov10n.pt': 70% ━━━━━━━━╸─── 4.0/5.6MB 39.6MB/s 0.1s<0.0s
+[KDownloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov10n.pt to 'yolov10n.pt': 100% ━━━━━━━━━━━━ 5.6MB 43.9MB/s 0.1s
+Ultralytics 8.4.71 🚀 Python-3.12.13 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 4090, 24081MiB)
+[34m[1mengine/trainer: [0magnostic_nms=False, amp=True, angle=1.0, augment=False, auto_augment=randaugment, batch=32, bgr=0.0, box=7.5, cache=None, cfg=None, classes=None, close_mosaic=10, cls=0.5, cls_pw=0.0, compile=False, conf=None, copy_paste=0.0, copy_paste_mode=flip, cos_lr=False, cutmix=0.0, data=data/yolo/mixed_syn1k_smoke_real1pct/data.yaml, degrees=0.0, deterministic=True, device=0, dfl=1.5, dnn=False, dropout=0.0, dynamic=False, embed=None, end2end=None, epochs=3, erasing=0.4, exist_ok=True, fliplr=0.5, flipud=0.0, format=torchscript, fraction=1.0, freeze=None, half=False, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, imgsz=512, int8=False, iou=0.7, keras=False, kobj=1.0, line_width=None, lr0=0.01, lrf=0.01, mask_ratio=4, max_det=300, mixup=0.0, mode=train, model=yolov10n.pt, momentum=0.937, mosaic=1.0, multi_scale=0.0, name=expC_1pct_real_1k_smoke_ml, nbs=64, nms=False, opset=None, optimize=False, optimizer=auto, overlap_mask=True, patience=20, perspective=0.0, plots=True, pose=12.0, pretrained=True, profile=False, project=/work/s473634/rareplanes-domain-shift/runs, rect=False, resume=False, retina_masks=False, rle=1.0, save=True, save_conf=False, save_crop=False, save_dir=/work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml, save_frames=False, save_json=False, save_period=-1, save_txt=False, scale=0.5, seed=42, shear=0.0, show=False, show_boxes=True, show_conf=True, show_labels=True, simplify=True, single_cls=False, source=None, split=val, stream_buffer=False, task=detect, time=None, tracker=botsort.yaml, translate=0.1, val=True, verbose=True, vid_stride=1, visualize=False, warmup_bias_lr=0.1, warmup_epochs=3.0, warmup_momentum=0.8, weight_decay=0.0005, workers=4, workspace=None
+
+[KDownloading https://ultralytics.com/assets/Arial.ttf to '/tmp/Ultralytics/Arial.ttf': 100% ━━━━━━━━━━━━ 755.1KB 13.4MB/s 0.1s
+Overriding model.yaml nc=80 with nc=1
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       464  ultralytics.nn.modules.conv.Conv             [3, 16, 3, 2]                 
+  1                  -1  1      4672  ultralytics.nn.modules.conv.Conv             [16, 32, 3, 2]                
+  2                  -1  1      7360  ultralytics.nn.modules.block.C2f             [32, 32, 1, True]             
+  3                  -1  1     18560  ultralytics.nn.modules.conv.Conv             [32, 64, 3, 2]                
+  4                  -1  2     49664  ultralytics.nn.modules.block.C2f             [64, 64, 2, True]             
+  5                  -1  1      9856  ultralytics.nn.modules.block.SCDown          [64, 128, 3, 2]               
+  6                  -1  2    197632  ultralytics.nn.modules.block.C2f             [128, 128, 2, True]           
+  7                  -1  1     36096  ultralytics.nn.modules.block.SCDown          [128, 256, 3, 2]              
+  8                  -1  1    460288  ultralytics.nn.modules.block.C2f             [256, 256, 1, True]           
+  9                  -1  1    164608  ultralytics.nn.modules.block.SPPF            [256, 256, 5]                 
+ 10                  -1  1    249728  ultralytics.nn.modules.block.PSA             [256, 256]                    
+ 11                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 12             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 13                  -1  1    148224  ultralytics.nn.modules.block.C2f             [384, 128, 1]                 
+ 14                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 15             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  1     37248  ultralytics.nn.modules.block.C2f             [192, 64, 1]                  
+ 17                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+ 18            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 19                  -1  1    123648  ultralytics.nn.modules.block.C2f             [192, 128, 1]                 
+ 20                  -1  1     18048  ultralytics.nn.modules.block.SCDown          [128, 128, 3, 2]              
+ 21            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1    282624  ultralytics.nn.modules.block.C2fCIB          [384, 256, 1, True, True]     
+ 23        [16, 19, 22]  1    861718  ultralytics.nn.modules.head.v10Detect        [1, [64, 128, 256]]           
+YOLOv10n summary: 224 layers, 2,707,430 parameters, 2,707,414 gradients, 8.4 GFLOPs
+
+Transferred 493/595 items from pretrained weights
+Freezing layer 'model.23.dfl.conv.weight'
+[34m[1mAMP: [0mrunning Automatic Mixed Precision (AMP) checks...
+
+[KDownloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26n.pt to 'yolo26n.pt': 60% ━━━━━━━───── 3.2/5.3MB 31.4MB/s 0.1s<0.1s
+[KDownloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26n.pt to 'yolo26n.pt': 100% ━━━━━━━━━━━━ 5.3MB 45.3MB/s 0.1s
+[34m[1mAMP: [0mchecks passed ✅
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 5414.7±2659.9 MB/s, size: 3029.3 KB)
+
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 50 images, 0 backgrounds, 0 corrupt: 4% ╸─────────── 50/1049 87.2it/s 0.2s<11.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 65 images, 0 backgrounds, 0 corrupt: 6% ╸─────────── 65/1049 103.3it/s 0.3s<9.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 74 images, 0 backgrounds, 0 corrupt: 7% ╸─────────── 74/1049 91.8it/s 0.4s<10.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 84 images, 0 backgrounds, 0 corrupt: 8% ╸─────────── 84/1049 94.1it/s 0.5s<10.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 97 images, 0 backgrounds, 0 corrupt: 9% ━─────────── 97/1049 98.6it/s 0.6s<9.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 107 images, 0 backgrounds, 0 corrupt: 10% ━─────────── 107/1049 91.3it/s 0.8s<10.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 118 images, 0 backgrounds, 0 corrupt: 11% ━─────────── 118/1049 94.0it/s 0.9s<9.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 129 images, 0 backgrounds, 0 corrupt: 12% ━─────────── 129/1049 95.9it/s 1.0s<9.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 138 images, 0 backgrounds, 0 corrupt: 13% ━╸────────── 138/1049 94.1it/s 1.1s<9.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 148 images, 0 backgrounds, 0 corrupt: 14% ━╸────────── 148/1049 88.3it/s 1.2s<10.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 159 images, 0 backgrounds, 0 corrupt: 15% ━╸────────── 159/1049 88.9it/s 1.3s<10.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 172 images, 0 backgrounds, 0 corrupt: 16% ━╸────────── 172/1049 91.0it/s 1.5s<9.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 183 images, 0 backgrounds, 0 corrupt: 17% ━━────────── 183/1049 95.7it/s 1.6s<9.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 193 images, 0 backgrounds, 0 corrupt: 18% ━━────────── 193/1049 95.8it/s 1.7s<8.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 202 images, 0 backgrounds, 0 corrupt: 19% ━━────────── 202/1049 93.7it/s 1.8s<9.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 212 images, 0 backgrounds, 0 corrupt: 20% ━━────────── 212/1049 87.1it/s 1.9s<9.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 221 images, 0 backgrounds, 0 corrupt: 21% ━━╸───────── 221/1049 85.4it/s 2.0s<9.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 233 images, 0 backgrounds, 0 corrupt: 22% ━━╸───────── 233/1049 93.6it/s 2.1s<8.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 239 images, 0 backgrounds, 0 corrupt: 22% ━━╸───────── 239/1049 82.5it/s 2.3s<9.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 252 images, 0 backgrounds, 0 corrupt: 24% ━━╸───────── 252/1049 93.6it/s 2.4s<8.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 262 images, 0 backgrounds, 0 corrupt: 24% ━━╸───────── 262/1049 91.0it/s 2.5s<8.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 274 images, 0 backgrounds, 0 corrupt: 26% ━━━───────── 274/1049 94.9it/s 2.6s<8.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 285 images, 0 backgrounds, 0 corrupt: 27% ━━━───────── 285/1049 97.3it/s 2.7s<7.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 294 images, 0 backgrounds, 0 corrupt: 28% ━━━───────── 294/1049 90.2it/s 2.8s<8.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 302 images, 0 backgrounds, 0 corrupt: 28% ━━━───────── 302/1049 86.1it/s 2.9s<8.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 317 images, 0 backgrounds, 0 corrupt: 30% ━━━╸──────── 317/1049 94.7it/s 3.1s<7.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 325 images, 0 backgrounds, 0 corrupt: 30% ━━━╸──────── 325/1049 87.2it/s 3.2s<8.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 336 images, 0 backgrounds, 0 corrupt: 32% ━━━╸──────── 336/1049 92.5it/s 3.3s<7.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 347 images, 0 backgrounds, 0 corrupt: 33% ━━━╸──────── 347/1049 90.1it/s 3.4s<7.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 359 images, 0 backgrounds, 0 corrupt: 34% ━━━━──────── 359/1049 96.4it/s 3.5s<7.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 368 images, 0 backgrounds, 0 corrupt: 35% ━━━━──────── 368/1049 90.4it/s 3.6s<7.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 376 images, 0 backgrounds, 0 corrupt: 35% ━━━━──────── 376/1049 87.3it/s 3.7s<7.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 387 images, 0 backgrounds, 0 corrupt: 36% ━━━━──────── 387/1049 89.2it/s 3.9s<7.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 395 images, 0 backgrounds, 0 corrupt: 37% ━━━━╸─────── 395/1049 72.5it/s 4.1s<9.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 403 images, 0 backgrounds, 0 corrupt: 38% ━━━━╸─────── 403/1049 62.7it/s 4.3s<10.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 407 images, 0 backgrounds, 0 corrupt: 38% ━━━━╸─────── 407/1049 54.9it/s 4.4s<11.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 422 images, 0 backgrounds, 0 corrupt: 40% ━━━━╸─────── 422/1049 66.7it/s 4.6s<9.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 430 images, 0 backgrounds, 0 corrupt: 40% ━━━━╸─────── 430/1049 70.1it/s 4.7s<8.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 441 images, 0 backgrounds, 0 corrupt: 42% ━━━━━─────── 441/1049 82.0it/s 4.8s<7.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 449 images, 0 backgrounds, 0 corrupt: 42% ━━━━━─────── 449/1049 81.4it/s 4.9s<7.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 460 images, 0 backgrounds, 0 corrupt: 43% ━━━━━─────── 460/1049 82.9it/s 5.0s<7.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 469 images, 0 backgrounds, 0 corrupt: 44% ━━━━━─────── 469/1049 82.3it/s 5.1s<7.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 480 images, 0 backgrounds, 0 corrupt: 45% ━━━━━─────── 480/1049 88.8it/s 5.2s<6.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 490 images, 0 backgrounds, 0 corrupt: 46% ━━━━━╸────── 490/1049 91.5it/s 5.3s<6.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 501 images, 0 backgrounds, 0 corrupt: 47% ━━━━━╸────── 501/1049 89.2it/s 5.4s<6.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 511 images, 0 backgrounds, 0 corrupt: 48% ━━━━━╸────── 511/1049 91.3it/s 5.5s<5.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 519 images, 0 backgrounds, 0 corrupt: 49% ━━━━━╸────── 519/1049 87.6it/s 5.6s<6.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 527 images, 0 backgrounds, 0 corrupt: 50% ━━━━━━────── 527/1049 83.7it/s 5.8s<6.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 539 images, 0 backgrounds, 0 corrupt: 51% ━━━━━━────── 539/1049 91.3it/s 5.9s<5.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 550 images, 0 backgrounds, 0 corrupt: 52% ━━━━━━────── 550/1049 89.3it/s 6.0s<5.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 561 images, 0 backgrounds, 0 corrupt: 53% ━━━━━━────── 561/1049 92.3it/s 6.1s<5.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 572 images, 0 backgrounds, 0 corrupt: 54% ━━━━━━╸───── 572/1049 97.0it/s 6.2s<4.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 581 images, 0 backgrounds, 0 corrupt: 55% ━━━━━━╸───── 581/1049 89.1it/s 6.3s<5.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 592 images, 0 backgrounds, 0 corrupt: 56% ━━━━━━╸───── 592/1049 88.5it/s 6.5s<5.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 603 images, 0 backgrounds, 0 corrupt: 57% ━━━━━━╸───── 603/1049 89.6it/s 6.6s<5.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 616 images, 0 backgrounds, 0 corrupt: 58% ━━━━━━━───── 616/1049 99.4it/s 6.7s<4.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 624 images, 0 backgrounds, 0 corrupt: 59% ━━━━━━━───── 624/1049 91.7it/s 6.8s<4.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 635 images, 0 backgrounds, 0 corrupt: 60% ━━━━━━━───── 635/1049 94.5it/s 6.9s<4.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 646 images, 0 backgrounds, 0 corrupt: 61% ━━━━━━━───── 646/1049 99.0it/s 7.0s<4.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 655 images, 0 backgrounds, 0 corrupt: 62% ━━━━━━━───── 655/1049 96.1it/s 7.1s<4.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 665 images, 0 backgrounds, 0 corrupt: 63% ━━━━━━━╸──── 665/1049 89.0it/s 7.2s<4.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 674 images, 0 backgrounds, 0 corrupt: 64% ━━━━━━━╸──── 674/1049 89.3it/s 7.3s<4.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 686 images, 0 backgrounds, 0 corrupt: 65% ━━━━━━━╸──── 686/1049 96.1it/s 7.4s<3.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 694 images, 0 backgrounds, 0 corrupt: 66% ━━━━━━━╸──── 694/1049 91.2it/s 7.5s<3.9s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 705 images, 0 backgrounds, 0 corrupt: 67% ━━━━━━━━──── 705/1049 94.7it/s 7.7s<3.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 714 images, 0 backgrounds, 0 corrupt: 68% ━━━━━━━━──── 714/1049 93.2it/s 7.8s<3.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 724 images, 0 backgrounds, 0 corrupt: 69% ━━━━━━━━──── 724/1049 89.7it/s 7.9s<3.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 732 images, 0 backgrounds, 0 corrupt: 69% ━━━━━━━━──── 732/1049 85.2it/s 8.0s<3.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 743 images, 0 backgrounds, 0 corrupt: 70% ━━━━━━━━──── 743/1049 90.7it/s 8.1s<3.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 750 images, 0 backgrounds, 0 corrupt: 71% ━━━━━━━━╸─── 750/1049 82.6it/s 8.2s<3.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 758 images, 0 backgrounds, 0 corrupt: 72% ━━━━━━━━╸─── 758/1049 79.6it/s 8.3s<3.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 769 images, 0 backgrounds, 0 corrupt: 73% ━━━━━━━━╸─── 769/1049 85.7it/s 8.4s<3.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 778 images, 0 backgrounds, 0 corrupt: 74% ━━━━━━━━╸─── 778/1049 86.2it/s 8.5s<3.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 793 images, 0 backgrounds, 0 corrupt: 75% ━━━━━━━━━─── 793/1049 98.7it/s 8.6s<2.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 803 images, 0 backgrounds, 0 corrupt: 76% ━━━━━━━━━─── 803/1049 97.8it/s 8.7s<2.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 815 images, 0 backgrounds, 0 corrupt: 77% ━━━━━━━━━─── 815/1049 104.2it/s 8.8s<2.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 826 images, 0 backgrounds, 0 corrupt: 78% ━━━━━━━━━─── 826/1049 105.2it/s 8.9s<2.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 835 images, 0 backgrounds, 0 corrupt: 79% ━━━━━━━━━╸── 835/1049 96.3it/s 9.1s<2.2s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 845 images, 0 backgrounds, 0 corrupt: 80% ━━━━━━━━━╸── 845/1049 84.5it/s 9.2s<2.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 861 images, 0 backgrounds, 0 corrupt: 82% ━━━━━━━━━╸── 861/1049 88.7it/s 9.4s<2.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 872 images, 0 backgrounds, 0 corrupt: 83% ━━━━━━━━━╸── 872/1049 90.5it/s 9.5s<2.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 882 images, 0 backgrounds, 0 corrupt: 84% ━━━━━━━━━━── 882/1049 90.3it/s 9.6s<1.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 892 images, 0 backgrounds, 0 corrupt: 85% ━━━━━━━━━━── 892/1049 92.8it/s 9.7s<1.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 902 images, 0 backgrounds, 0 corrupt: 85% ━━━━━━━━━━── 902/1049 93.0it/s 9.8s<1.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 911 images, 0 backgrounds, 0 corrupt: 86% ━━━━━━━━━━── 911/1049 91.6it/s 9.9s<1.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 920 images, 0 backgrounds, 0 corrupt: 87% ━━━━━━━━━━╸─ 920/1049 90.6it/s 10.0s<1.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 929 images, 0 backgrounds, 0 corrupt: 88% ━━━━━━━━━━╸─ 929/1049 85.8it/s 10.2s<1.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 944 images, 0 backgrounds, 0 corrupt: 89% ━━━━━━━━━━╸─ 944/1049 100.9it/s 10.3s<1.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 954 images, 0 backgrounds, 0 corrupt: 90% ━━━━━━━━━━╸─ 954/1049 97.5it/s 10.4s<1.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 963 images, 0 backgrounds, 0 corrupt: 91% ━━━━━━━━━━━─ 963/1049 88.6it/s 10.5s<1.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 976 images, 0 backgrounds, 0 corrupt: 93% ━━━━━━━━━━━─ 976/1049 97.2it/s 10.6s<0.8s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 985 images, 0 backgrounds, 0 corrupt: 93% ━━━━━━━━━━━─ 985/1049 90.4it/s 10.8s<0.7s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 994 images, 0 backgrounds, 0 corrupt: 94% ━━━━━━━━━━━─ 994/1049 86.1it/s 10.9s<0.6s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1005 images, 0 backgrounds, 0 corrupt: 95% ━━━━━━━━━━━─ 1005/1049 89.3it/s 11.0s<0.5s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1015 images, 0 backgrounds, 0 corrupt: 96% ━━━━━━━━━━━╸ 1015/1049 92.2it/s 11.1s<0.4s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1024 images, 0 backgrounds, 0 corrupt: 97% ━━━━━━━━━━━╸ 1024/1049 90.1it/s 11.2s<0.3s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1036 images, 0 backgrounds, 0 corrupt: 98% ━━━━━━━━━━━╸ 1036/1049 97.2it/s 11.3s<0.1s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1046 images, 0 backgrounds, 0 corrupt: 99% ━━━━━━━━━━━╸ 1046/1049 97.0it/s 11.4s<0.0s
+[K[34m[1mtrain: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train... 1049 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 1049/1049 92.0it/s 11.4s
+[34m[1mtrain: [0mNew cache created: /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/train.cache
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 4398.7±1797.4 MB/s, size: 2854.7 KB)
+
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 12 images, 0 backgrounds, 0 corrupt: 6% ╸─────────── 12/185 24.7it/s 0.1s<7.0s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 28 images, 0 backgrounds, 0 corrupt: 15% ━╸────────── 28/185 54.2it/s 0.3s<2.9s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 36 images, 0 backgrounds, 0 corrupt: 19% ━━────────── 36/185 60.6it/s 0.4s<2.5s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 46 images, 0 backgrounds, 0 corrupt: 24% ━━╸───────── 46/185 65.6it/s 0.5s<2.1s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 56 images, 0 backgrounds, 0 corrupt: 30% ━━━╸──────── 56/185 75.3it/s 0.6s<1.7s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 65 images, 0 backgrounds, 0 corrupt: 35% ━━━━──────── 65/185 75.8it/s 0.7s<1.6s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 75 images, 0 backgrounds, 0 corrupt: 40% ━━━━╸─────── 75/185 82.3it/s 0.8s<1.3s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 79 images, 0 backgrounds, 0 corrupt: 42% ━━━━━─────── 79/185 68.6it/s 0.9s<1.5s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 93 images, 0 backgrounds, 0 corrupt: 50% ━━━━━━────── 93/185 77.2it/s 1.1s<1.2s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 105 images, 0 backgrounds, 0 corrupt: 56% ━━━━━━╸───── 105/185 87.4it/s 1.2s<0.9s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 114 images, 0 backgrounds, 0 corrupt: 61% ━━━━━━━───── 114/185 85.4it/s 1.3s<0.8s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 125 images, 0 backgrounds, 0 corrupt: 67% ━━━━━━━━──── 125/185 81.4it/s 1.5s<0.7s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 136 images, 0 backgrounds, 0 corrupt: 73% ━━━━━━━━╸─── 136/185 88.4it/s 1.6s<0.6s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 148 images, 0 backgrounds, 0 corrupt: 80% ━━━━━━━━━╸── 148/185 92.1it/s 1.7s<0.4s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 157 images, 0 backgrounds, 0 corrupt: 84% ━━━━━━━━━━── 157/185 84.7it/s 1.8s<0.3s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 171 images, 0 backgrounds, 0 corrupt: 92% ━━━━━━━━━━━─ 171/185 97.5it/s 1.9s<0.1s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 177 images, 0 backgrounds, 0 corrupt: 95% ━━━━━━━━━━━─ 177/185 85.1it/s 2.0s<0.1s
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val... 185 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 185/185 89.5it/s 2.1s
+[34m[1mval: [0mNew cache created: /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val.cache
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.01' and 'momentum=0.937' and determining best 'optimizer', 'lr0' and 'momentum' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.002, momentum=0.9) with parameter groups 95 weight(decay=0.0), 108 weight(decay=0.0005), 107 bias(decay=0.0)
+Plotting labels to /work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml/labels.jpg... 
+Image sizes 512 train, 512 val
+Using 4 dataloader workers
+Logging results to [1m/work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml[0m
+Starting training for 3 epochs...
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+
+[K        1/3      3.36G      2.423       4.02      1.191        662        512: 0% ──────────── 0/33  1.6s
+[K        1/3      3.49G      2.345      3.971      1.204        676        512: 3% ──────────── 1/33 1.6it/s 1.8s<19.9s
+[K        1/3      3.49G      2.318      3.954      1.206        702        512: 6% ╸─────────── 2/33 2.1it/s 2.1s<15.1s
+[K        1/3      3.67G      2.321      3.941      1.202        820        512: 9% ━─────────── 3/33 2.6it/s 2.4s<11.5s
+[K        1/3      3.67G      2.306      3.945      1.202        577        512: 12% ━─────────── 4/33 3.7it/s 2.5s<7.8s
+[K        1/3      3.67G      2.287      3.942      1.197        673        512: 15% ━╸────────── 5/33 3.9it/s 2.8s<7.2s
+[K        1/3      3.69G      2.267      3.926      1.184        613        512: 18% ━━────────── 6/33 4.5it/s 3.0s<6.0s
+[K        1/3      3.69G      2.233      3.896      1.167        664        512: 21% ━━╸───────── 7/33 6.0it/s 3.1s<4.3s
+[K        1/3      3.69G      2.163       3.81      1.129        623        512: 27% ━━━───────── 9/33 4.9it/s 3.9s<4.9s
+[K        1/3      3.69G      2.103      3.702      1.095        746        512: 33% ━━━━──────── 11/33 7.2it/s 4.1s<3.0s
+[K        1/3      3.69G       2.07       3.64      1.081        490        512: 36% ━━━━──────── 12/33 5.4it/s 5.0s<3.9s
+[K        1/3      3.69G      2.052      3.584      1.068        672        512: 39% ━━━━╸─────── 13/33 4.0it/s 6.5s<5.0s
+[K        1/3      3.69G      2.027       3.52      1.058        627        512: 42% ━━━━━─────── 14/33 5.0it/s 6.6s<3.8s
+[K        1/3      3.69G      2.011      3.456      1.048        640        512: 45% ━━━━━─────── 15/33 5.8it/s 6.8s<3.1s
+[K        1/3      3.69G      1.999      3.385      1.039        604        512: 48% ━━━━━╸────── 16/33 5.0it/s 7.1s<3.4s
+[K        1/3      3.69G      1.984       3.32      1.032        506        512: 51% ━━━━━━────── 17/33 3.6it/s 9.5s<4.4s
+[K        1/3      3.69G      1.969      3.254      1.026        548        512: 54% ━━━━━━╸───── 18/33 4.8it/s 9.6s<3.1s
+[K        1/3      3.69G      1.958      3.192       1.02        694        512: 57% ━━━━━━╸───── 19/33 5.7it/s 9.8s<2.4s
+[K        1/3      3.69G      1.949       3.13      1.014        728        512: 60% ━━━━━━━───── 20/33 6.3it/s 9.9s<2.1s
+[K        1/3      3.69G      1.948      3.079      1.008        715        512: 63% ━━━━━━━╸──── 21/33 4.5it/s 12.4s<2.7s
+[K        1/3      3.69G      1.944      3.025      1.004        806        512: 66% ━━━━━━━━──── 22/33 6.0it/s 12.5s<1.8s
+[K        1/3      3.69G      1.937      2.973     0.9998        624        512: 69% ━━━━━━━━──── 23/33 6.4it/s 12.6s<1.6s
+[K        1/3      3.69G      1.936      2.928     0.9962        714        512: 72% ━━━━━━━━╸─── 24/33 6.7it/s 12.7s<1.3s
+[K        1/3      3.69G      1.927      2.882     0.9924        595        512: 75% ━━━━━━━━━─── 25/33 4.9it/s 14.1s<1.6s
+[K        1/3      3.69G      1.912      2.797     0.9863        609        512: 81% ━━━━━━━━━╸── 27/33 7.6it/s 14.3s<0.8s
+[K        1/3      3.69G      1.895      2.718     0.9805        574        512: 87% ━━━━━━━━━━╸─ 29/33 5.9it/s 15.3s<0.7s
+[K        1/3      3.69G      1.885      2.649     0.9758        664        512: 93% ━━━━━━━━━━━─ 31/33 8.3it/s 15.4s<0.2s
+[K        1/3      3.69G      1.879      2.616     0.9743        491        512: 96% ━━━━━━━━━━━╸ 32/33 7.8it/s 15.6s<0.1s
+[K        1/3      3.69G      1.879      2.616     0.9743        491        512: 100% ━━━━━━━━━━━━ 33/33 2.1it/s 15.6s
+
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 33% ━━━━──────── 1/3 2.9s/it 0.9s<5.9s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 2.8it/s 1.1s
+                   all        185       2233     0.0293      0.728     0.0304     0.0146
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+
+[K        2/3      3.88G       1.71      1.617     0.9004        607        512: 3% ──────────── 1/33 2.1it/s 0.1s<15.5s
+[K        2/3      3.88G      1.708      1.599      0.906        550        512: 9% ━─────────── 3/33 5.3it/s 0.3s<5.6s
+[K        2/3      3.88G       1.71        1.6     0.9045        575        512: 12% ━─────────── 4/33 5.4it/s 0.5s<5.3s
+[K        2/3      3.88G      1.722      1.576      0.903        755        512: 18% ━━────────── 6/33 7.6it/s 0.6s<3.5s
+[K        2/3      3.88G      1.728      1.552     0.9038        644        512: 24% ━━╸───────── 8/33 6.1it/s 1.4s<4.1s
+[K        2/3      3.88G       1.71      1.528      0.904        590        512: 30% ━━━╸──────── 10/33 8.9it/s 1.5s<2.6s
+[K        2/3      3.88G      1.695      1.514     0.9039        571        512: 36% ━━━━──────── 12/33 6.7it/s 2.7s<3.1s
+[K        2/3      3.88G      1.687      1.502     0.9044        606        512: 42% ━━━━━─────── 14/33 9.0it/s 2.8s<2.1s
+[K        2/3      3.88G      1.684      1.494     0.9055        514        512: 48% ━━━━━╸────── 16/33 7.0it/s 3.7s<2.4s
+[K        2/3      3.88G      1.682       1.48     0.9046        696        512: 54% ━━━━━━╸───── 18/33 9.9it/s 3.8s<1.5s
+[K        2/3      3.88G      1.681       1.47     0.9041        708        512: 60% ━━━━━━━───── 20/33 7.7it/s 4.6s<1.7s
+[K        2/3      3.88G      1.672      1.457      0.904        721        512: 66% ━━━━━━━━──── 22/33 10.0it/s 4.7s<1.1s
+[K        2/3      3.89G      1.668      1.443     0.9038        558        512: 72% ━━━━━━━━╸─── 24/33 7.6it/s 5.7s<1.2s
+[K        2/3      3.89G      1.659       1.43     0.9039        643        512: 78% ━━━━━━━━━─── 26/33 9.8it/s 5.8s<0.7s
+[K        2/3      3.89G      1.659      1.424     0.9048        557        512: 84% ━━━━━━━━━━── 28/33 7.5it/s 6.8s<0.7s
+[K        2/3      3.89G      1.651      1.417     0.9044        635        512: 90% ━━━━━━━━━━╸─ 30/33 9.9it/s 6.9s<0.3s
+[K        2/3      3.89G      1.648       1.41     0.9046        469        512: 96% ━━━━━━━━━━━╸ 32/33 7.8it/s 7.6s<0.1s
+[K        2/3      3.89G      1.648       1.41     0.9046        469        512: 100% ━━━━━━━━━━━━ 33/33 4.3it/s 7.6s
+
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 66% ━━━━━━━━──── 2/3 3.5it/s 0.2s<0.3s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 11.9it/s 0.3s
+                   all        185       2233     0.0317       0.58      0.323      0.243
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+
+[K        3/3      3.89G       1.51      1.224     0.9005        629        512: 3% ──────────── 1/33 2.3it/s 0.1s<13.8s
+[K        3/3      3.89G      1.529      1.239      0.892        633        512: 9% ━─────────── 3/33 3.4it/s 0.5s<8.9s
+[K        3/3      3.89G      1.522      1.231     0.8943        720        512: 15% ━╸────────── 5/33 7.0it/s 0.6s<4.0s
+[K        3/3      3.89G       1.54      1.233     0.8974        561        512: 21% ━━╸───────── 7/33 5.6it/s 1.6s<4.7s
+[K        3/3      3.89G      1.555       1.23     0.8974        790        512: 27% ━━━───────── 9/33 8.4it/s 1.7s<2.9s
+[K        3/3      4.09G      1.547      1.227     0.8966        603        512: 33% ━━━━──────── 11/33 6.6it/s 2.5s<3.3s
+[K        3/3      4.09G      1.539       1.22     0.8961        700        512: 39% ━━━━╸─────── 13/33 9.4it/s 2.7s<2.1s
+[K        3/3      4.09G      1.536      1.215     0.8946        569        512: 45% ━━━━━─────── 15/33 7.3it/s 3.4s<2.5s
+[K        3/3      4.09G      1.535      1.207     0.8957        720        512: 51% ━━━━━━────── 17/33 9.8it/s 3.6s<1.6s
+[K        3/3      4.09G       1.54      1.217     0.8965        673        512: 57% ━━━━━━╸───── 19/33 7.7it/s 4.3s<1.8s
+[K        3/3      4.09G      1.536       1.21     0.8955        651        512: 63% ━━━━━━━╸──── 21/33 9.9it/s 4.4s<1.2s
+[K        3/3      4.09G      1.532      1.211     0.8955        643        512: 69% ━━━━━━━━──── 23/33 7.6it/s 5.3s<1.3s
+[K        3/3      4.09G      1.528      1.208      0.896        633        512: 75% ━━━━━━━━━─── 25/33 10.0it/s 5.4s<0.8s
+[K        3/3      4.09G      1.526      1.204     0.8959        616        512: 81% ━━━━━━━━━╸── 27/33 7.8it/s 6.2s<0.8s
+[K        3/3      4.09G      1.521        1.2     0.8957        585        512: 87% ━━━━━━━━━━╸─ 29/33 10.2it/s 6.3s<0.4s
+[K        3/3      4.09G      1.523      1.196     0.8963        667        512: 93% ━━━━━━━━━━━─ 31/33 7.8it/s 7.3s<0.3s
+[K        3/3      4.09G       1.52      1.194     0.8962        466        512: 100% ━━━━━━━━━━━━ 33/33 4.5it/s 7.3s
+
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 66% ━━━━━━━━──── 2/3 3.7it/s 0.2s<0.3s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 12.4it/s 0.2s
+                   all        185       2233      0.922      0.303      0.696       0.48
+
+3 epochs completed in 0.009 hours.
+Optimizer stripped from /work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml/weights/last.pt, 5.7MB
+Optimizer stripped from /work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml/weights/best.pt, 5.7MB
+
+Validating /work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml/weights/best.pt...
+Ultralytics 8.4.71 🚀 Python-3.12.13 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 4090, 24081MiB)
+YOLOv10n summary (fused): 102 layers, 2,265,363 parameters, 0 gradients, 6.5 GFLOPs
+
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 33% ━━━━──────── 1/3 2.7it/s 0.1s<0.7s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 66% ━━━━━━━━──── 2/3 3.0it/s 0.4s<0.3s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 3/3 4.6it/s 0.6s
+                   all        185       2233      0.922      0.304      0.696       0.48
+Speed: 0.0ms preprocess, 0.2ms inference, 0.0ms loss, 0.1ms postprocess per image
+Results saved to [1m/work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml[0m
+Ultralytics 8.4.71 🚀 Python-3.12.13 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 4090, 24081MiB)
+YOLOv10n summary (fused): 102 layers, 2,265,363 parameters, 0 gradients, 6.5 GFLOPs
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 16956.7±4377.1 MB/s, size: 1919.4 KB)
+
+[K[34m[1mval: [0mScanning /work/s473634/rareplanes-data/data/yolo/mixed_syn1k_smoke_real1pct/labels/val.cache... 185 images, 0 backgrounds, 0 corrupt: 100% ━━━━━━━━━━━━ 185/185 129.3Mit/s 0.0s
+
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 8% ━─────────── 1/12 2.6s/it 0.8s<29.0s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 16% ━━────────── 2/12 1.5it/s 1.0s<6.7s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 25% ━━━───────── 3/12 2.2it/s 1.3s<4.0s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 33% ━━━━──────── 4/12 2.5it/s 1.6s<3.2s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 50% ━━━━━━────── 6/12 6.0it/s 1.8s<1.0s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 75% ━━━━━━━━━─── 9/12 12.1it/s 1.9s<0.2s
+[K                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 12/12 6.1it/s 2.0s
+                   all        185       2233      0.924      0.303      0.699      0.482
+Speed: 0.6ms preprocess, 1.4ms inference, 0.0ms loss, 0.1ms postprocess per image
+Results saved to [1m/work/s473634/rareplanes-domain-shift/runs/expC_1pct_real_1k_smoke_ml_eval[0m
+
+=== METRYKI ===
+{
+  "mAP50": 0.6990596416348276,
+  "mAP50-95": 0.4818976531465863,
+  "precision": 0.9236102403027726,
+  "recall": 0.30321659449314164
+}
+[zapisano] /work/s473634/rareplanes-domain-shift/results/baselines/expC_1pct_real_1k_smoke_ml.json
+[2026-06-18 20:24:38] [cmd done] czas=64.7s
+[2026-06-18 20:24:38] checkpoint OK: runs/expC_1pct_real_1k_smoke_ml/weights/best.pt (5.5 MB)
+
+==============================================================================
+[2026-06-18 20:24:38] expC_1pct_real_1k_smoke_ml: ewaluacja real holdout
+==============================================================================
+[2026-06-18 20:24:38] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/eval_per_size.py --weights runs/expC_1pct_real_1k_smoke_ml/weights/best.pt --img-dir data/real/PS-RGB_tiled/PS-RGB_tiled --coco-gt data/real/annotations/instances_test_aircraft.json --device 0 --imgsz 512 --name expC_1pct_real_1k_smoke_ml
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/home/s473634/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+[eval] obrazow do predykcji: 2710 / 2710 w GT
+[eval] detekcji: 813000
+loading annotations into memory...
+Done (t=0.02s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.96s)
+creating index...
+index created!
+
+=== AP per rozmiar (COCO) ===
+  AP@[.5:.95]   : 0.2644
+  AP@.5         : 0.4777
+  AP@.75        : 0.2604
+  AP_small      : 0.3034
+  AP_medium     : 0.3411
+  AP_large      : 0.1330
+  AR@1          : 0.1303
+  AR@10         : 0.4103
+  AR@100        : 0.5237
+  AR_small      : 0.4921
+  AR_medium     : 0.5610
+  AR_large      : 0.4771
+[zapisano] /work/s473634/rareplanes-domain-shift/results/per_size/expC_1pct_real_1k_smoke_ml.json
+[2026-06-18 20:25:06] [cmd done] czas=28.0s
+[2026-06-18 20:25:06] eval JSON OK: results/per_size/expC_1pct_real_1k_smoke_ml.json
+[2026-06-18 20:25:06] metryki: AP@.5=0.4777, AP@[.5:.95]=0.2644, AP_small=0.3034, AP_medium=0.3411, AP_large=0.1330
+
+==============================================================================
+[2026-06-18 20:25:06] Podsumowanie wynikow C
+==============================================================================
+[2026-06-18 20:25:06] [zapisano] results/expC_mixed_summary.csv
+[2026-06-18 20:25:06] [zapisano] results/expC_mixed_summary.md
+[2026-06-18 20:25:06] expC_1pct_real_1k_smoke_ml: mAP@50=0.4777, mAP@50:95=0.2644, AP_S=0.3034, AP_M=0.3411, AP_L=0.1330
+
+==============================================================================
+[2026-06-18 20:25:06] KONIEC
+==============================================================================
+[2026-06-18 20:25:06] caly czas wall-clock=96.6s
+[2026-06-18 20:25:06] [cmd done] elapsed=96.7s
+
+==============================================================================
+[2026-06-18 20:25:06] KONIEC expC.py
+==============================================================================
+[2026-06-18 20:25:06] total wall-clock=1451.3s
+[2026-06-18 20:25:06] log file=results/expC_run.log

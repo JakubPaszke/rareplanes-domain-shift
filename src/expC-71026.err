@@ -1,0 +1,5 @@
+
+Lmod is automatically replacing "anaconda/2025.12-1" with "miniconda/26.3.2-2".
+
+/work/s473634/rareplanes-domain-shift/expC.py:162: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  tar.extractall(dst)
