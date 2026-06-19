@@ -1,9 +1,13 @@
 # Grad-CAM — interpretowalność modeli (wymóg PDF)
 
 > EigenCAM na warstwie 8 (C2f, ostatni blok backbone YOLOv10n). Porównanie "uwagi"
-> 4 modeli na TYCH SAMYCH realnych kaflach z MAŁYMI obiektami (wymóg PDF:
+> 6 modeli na TYCH SAMYCH realnych kaflach z MAŁYMI obiektami (wymóg PDF:
 > "wizualizacja aktywacji dla małych obiektów"). Skrypt: `src/gradcam_compare.py`.
 > Wynik: `results/gradcam/gradcam_comparison.png`.
+>
+> Modele ułożone wg rosnącego transferu: synthetic 0.452 → A 0.459 → B2 0.490 →
+> D(imgsz320) 0.515 → C(mixed 25%) 0.947 → real-baseline 0.974. Modele C i D
+> dotrenowane lokalnie (D na Windows GPU, C od Miłosza z klastra, w `models/`).
 
 ## Metoda
 EigenCAM (pierwsza składowa główna aktywacji) zamiast klasycznego Grad-CAM, bo
@@ -13,8 +17,9 @@ zachowuje rozdzielczość przestrzenną. Backbone owinięty w `_BackboneWrap`
 (forward do warstwy 8), bo pełna głowica YOLOv10 zwraca tuple nieobsługiwany
 przez grad-cam.
 
-Modele porównane: real-baseline (0.974), synthetic 45k (0.452), A słaby HSV (0.455),
-B2 szum (0.490). Kafle wybrane jako te z największą liczbą małych obiektów (area <32²).
+Modele porównane (6, wg rosnącego transferu): synthetic 45k (0.452), A słaby HSV (0.459),
+B2 szum (0.490), D imgsz320 (0.515), C mixed 25% (0.947), real-baseline (0.974).
+Kafle wybrane jako te z największą liczbą małych obiektów (area <32²).
 
 ## Obserwacje jakościowe (do raportu)
 
@@ -32,6 +37,17 @@ B2 szum (0.490). Kafle wybrane jako te z największą liczbą małych obiektów 
    samolotów; mapy uwagi reagują na ich pozycje. To istotne dla wątku "co sieci
    uczą się z syntetyków": uczą się obiektu, nie tylko tła/artefaktów renderu.
 
+4. **D (imgsz320) ma ostrzejszą, bardziej skupioną uwagę na obiektach** niż
+   synthetic baseline — wizualne potwierdzenie mechanizmu skali: niska
+   rozdzielczość dopasowuje pozorny rozmiar obiektów ku małym realnym, model
+   wyraźniej lokalizuje samoloty zamiast rozlewać uwagę po tle.
+
+5. **C (mixed 25%) — uwaga przesuwa się ku wzorcowi real-baseline** (bardziej
+   rozlana, obejmuje kontekst sceny). To wizualny dowód, że domieszka realnych
+   danych "przeciąga" reprezentację modelu do realnej domeny — spójne z jego
+   najlepszym wynikiem (0.947, prawie poziom real). Progresja uwagi
+   synthetic→A→B→D→C→real jest monotoniczna względem mAP@50.
+
 ## Statement do raportu
 > Grad-CAM (EigenCAM) potwierdza, że modele — także te trenowane czysto na
 > syntetykach — lokalizują uwagę na realnych samolotach, w tym małych. Model
@@ -44,6 +60,5 @@ B2 szum (0.490). Kafle wybrane jako te z największą liczbą małych obiektów 
 ## Ograniczenia
 - EigenCAM pokazuje aktywację warstwy, nie bezpośrednio "co przesądza o detekcji"
   (brak gradientu klasowego w end2end). Interpretacja jakościowa, nie ilościowa.
-- Model mixed (C, 0.947) i D (imgsz320) nie uwzględnione — best.pt były na
-  klastrze/Colabie (nie zachowane lokalnie). Do dodania, jeśli Miłosz udostępni
-  wagi mixed.
+- Architektury transformerowe (RT-DETR) nie uwzględnione — inna struktura backbone
+  (brak warstwy 8 C2f); wymagałyby osobnego doboru warstwy docelowej.

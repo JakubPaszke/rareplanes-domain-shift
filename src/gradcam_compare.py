@@ -36,11 +36,14 @@ REAL_DIR = REAL_BASE / "PS-RGB_tiled" / "PS-RGB_tiled"
 REAL_GT = REAL_BASE / "annotations" / "instances_test_aircraft.json"
 
 # modele do porownania (etykieta -> sciezka best.pt). Pomija te, ktorych brak.
+# Kolejnosc = rosnacy transfer (luka -> najlepszy), real jako gorny ref na koncu.
 MODELS = {
-    "real-baseline (0.974)":      ROOT / "runs/real_baseline_yolov10n/weights/best.pt",
     "synthetic 45k (0.452)":      ROOT / "runs/syn_baseline_full45k_yolov10n/weights/best.pt",
-    "A: slaby HSV (0.455)":       ROOT / "runs/expA_final_45k/weights/best.pt",
+    "A: slaby HSV (0.459)":       ROOT / "runs/expA_final_45k/weights/best.pt",
     "B2: szum (0.490)":           Path("/mnt/c/rareplanes_win/runs/expB2_noise_files_10k_ml/weights/best.pt"),
+    "D: imgsz320 (0.515)":        ROOT / "models/expD_320_best.pt",
+    "C: mixed 25% (0.947)":       ROOT / "models/expC_mixed_best.pt",
+    "real-baseline (0.974)":      ROOT / "runs/real_baseline_yolov10n/weights/best.pt",
 }
 
 

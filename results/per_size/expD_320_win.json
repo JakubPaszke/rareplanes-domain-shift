@@ -1,0 +1,21 @@
+{
+  "name": "expD_320_win",
+  "weights": "models/expD_320_best.pt",
+  "coco_gt": "/mnt/c/rareplanes_win/data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 152795,
+  "metrics": {
+    "AP@[.5:.95]": 0.2804184108315625,
+    "AP@.5": 0.5146678307963232,
+    "AP@.75": 0.27038764102429524,
+    "AP_small": 0.28438127476636565,
+    "AP_medium": 0.37560362850726475,
+    "AP_large": 0.15391123730775386,
+    "AR@1": 0.13614210217263653,
+    "AR@10": 0.35782442748091603,
+    "AR@100": 0.43784497944803286,
+    "AR_small": 0.5250883392226148,
+    "AR_medium": 0.5187141216991963,
+    "AR_large": 0.17411042944785277
+  }
+}
