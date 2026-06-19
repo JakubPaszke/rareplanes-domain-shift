@@ -5,11 +5,11 @@ It downloads the required RarePlanes data, prepares YOLO datasets, runs the
 mixed-training sweep, evaluates on the real holdout, and writes summary files.
 
 Typical usage on a cluster:
-  python expC.py --smoke
-  python expC.py
+  python src/expC.py --smoke
+  python src/expC.py
 
 If your home directory has a small quota, put data on scratch:
-  python expC.py --data-dir /mnt/storage_2/scratch/$USER/rareplanes-data/data --smoke
+  python src/expC.py --data-dir /mnt/storage_2/scratch/$USER/rareplanes-data/data --smoke
 
 Outputs:
   results/per_size/expC*_ml.json
@@ -32,7 +32,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 RAREPLANES_BASE = "https://rareplanes-public.s3.amazonaws.com"
 LOG_HANDLE = None
 
