@@ -16,5 +16,9 @@
 | Eksp B: sam szum (10k) | 0.490 | 0.280 | 0.283 | 0.382 | 0.119 | 0.435 |
 | Eksp B: rozmycie+szum (10k) | 0.451 | 0.259 | 0.261 | 0.358 | 0.101 | 0.400 |
 | Eksp B: rozmycie+szum+jpeg (10k) | 0.451 | 0.261 | 0.294 | 0.356 | 0.101 | 0.403 |
+| Eksp C: mixed 1% real (10k) | 0.667 | 0.396 | 0.361 | 0.453 | 0.346 | 0.595 |
+| Eksp C: mixed 5% real (10k) | 0.852 | 0.566 | 0.520 | 0.576 | 0.611 | 0.714 |
+| Eksp C: mixed 10% real (10k) | 0.896 | 0.619 | 0.540 | 0.618 | 0.706 | 0.735 |
+| Eksp C: mixed 25% real (10k) | 0.947 | 0.712 | 0.636 | 0.697 | 0.817 | 0.782 |
 
 *RT-DETR z best.pt po 2 epokach (trening rozbiezny, patrz notes/07)

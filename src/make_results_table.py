@@ -26,6 +26,10 @@ ORDER = [
     ("expB2_noise_files_10k_ml",          "Eksp B: sam szum (10k)"),
     ("expB1_blur_noise_files_10k_ml",     "Eksp B: rozmycie+szum (10k)"),
     ("expB3_blur_noise_jpeg_files_10k_ml","Eksp B: rozmycie+szum+jpeg (10k)"),
+    ("expC_1pct_real_10k_ml",  "Eksp C: mixed 1% real (10k)"),
+    ("expC_5pct_real_10k_ml",  "Eksp C: mixed 5% real (10k)"),
+    ("expC_10pct_real_10k_ml", "Eksp C: mixed 10% real (10k)"),
+    ("expC_25pct_real_10k_ml", "Eksp C: mixed 25% real (10k)"),
 ]
 COLS = ["AP@.5", "AP@[.5:.95]", "AP_small", "AP_medium", "AP_large", "AR@100"]
 HDR = ["mAP@50", "mAP@50:95", "AP_S", "AP_M", "AP_L", "AR@100"]
