@@ -1,0 +1,21 @@
+{
+  "name": "final_yolov10n_syn1k_noise_real25pct_img320_hsvA1_ml",
+  "weights": "runs/final_yolov10n_syn1k_noise_real25pct_img320_hsvA1_ml/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 552002,
+  "metrics": {
+    "AP@[.5:.95]": 0.5291094354053445,
+    "AP@.5": 0.8426166878840362,
+    "AP@.75": 0.6020864262718472,
+    "AP_small": 0.4391957631556732,
+    "AP_medium": 0.528561215571333,
+    "AP_large": 0.6621768620196321,
+    "AR@1": 0.2600998238402818,
+    "AR@10": 0.6286553141514972,
+    "AR@100": 0.7236347621843804,
+    "AR_small": 0.6331566548881036,
+    "AR_medium": 0.7209816303099885,
+    "AR_large": 0.823558282208589
+  }
+}

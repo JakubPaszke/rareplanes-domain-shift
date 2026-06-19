@@ -1,0 +1,35 @@
+
+==============================================================================
+[2026-06-19 17:22:18] START expC.py
+==============================================================================
+[2026-06-19 17:22:18] Created symlink: data -> /work/s473634/rareplanes-data/data
+
+==============================================================================
+[2026-06-19 17:22:18] Plan
+==============================================================================
+[2026-06-19 17:22:18] data_dir=/work/s473634/rareplanes-data/data
+[2026-06-19 17:22:18] smoke=False
+[2026-06-19 17:22:18] download_workers=32
+[2026-06-19 17:22:18] batch=32, workers=4, imgsz=320, device=0
+[2026-06-19 17:22:18] model=yolov10n.pt, seed=42
+[2026-06-19 17:22:18] skip_download=False, skip_prepare=False, prepare_only=True
+[2026-06-19 17:22:18] dry_run=False
+
+==============================================================================
+[2026-06-19 17:22:18] Downloading annotations
+==============================================================================
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/real/annotations/instances_train_aircraft.json exists
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/real/annotations/instances_test_aircraft.json exists
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/synthetic/annotations/instances_train_aircraft.json exists
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/synthetic/annotations/instances_test_aircraft.json exists
+
+==============================================================================
+[2026-06-19 17:22:18] Downloading/extracting real train+test tiles
+==============================================================================
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/real/tarballs/train.tar.gz exists
+[2026-06-19 17:22:18] [skip] /work/s473634/rareplanes-data/data/real/tarballs/test.tar.gz exists
+[2026-06-19 17:22:18] [skip extract] real tiles already present: 8525
+
+==============================================================================
+[2026-06-19 17:22:18] Downloading synthetic 10k images
+==============================================================================

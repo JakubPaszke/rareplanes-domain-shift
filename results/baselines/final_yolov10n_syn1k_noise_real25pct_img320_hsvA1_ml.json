@@ -1,0 +1,20 @@
+{
+  "name": "final_yolov10n_syn1k_noise_real25pct_img320_hsvA1_ml",
+  "train_data": "data/yolo/final_mixed_syn1k_noise_real25pct/data.yaml",
+  "eval_data": "data/yolo/final_mixed_syn1k_noise_real25pct/data.yaml",
+  "epochs": 3,
+  "imgsz": 320,
+  "batch": 32,
+  "seed": 42,
+  "augmentation": {
+    "hsv_h": 0.015,
+    "hsv_s": 0.4,
+    "hsv_v": 0.3
+  },
+  "metrics": {
+    "mAP50": 0.7553645817039812,
+    "mAP50-95": 0.44736393911368716,
+    "precision": 0.8048556231603256,
+    "recall": 0.6705549539919982
+  }
+}

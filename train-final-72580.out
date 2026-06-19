@@ -1,0 +1,245 @@
+HOST=g1n3.cluster.wmi.amu.edu.pl
+DATA_DIR=/work/s473634/rareplanes-data/data
+CUDA_VISIBLE_DEVICES=0
+Fri Jun 19 19:12:04 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        On  |   00000000:00:10.0 Off |                  Off |
+|  0%   30C    P8             17W /  450W |       1MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Python 3.12.13
+torch: 2.5.1+cu121 cuda: True
+
+==============================================================================
+[2026-06-19 19:12:08] START train_final_model.py
+==============================================================================
+
+==============================================================================
+[2026-06-19 19:12:08] Plan
+==============================================================================
+[2026-06-19 19:12:08] Final recipe = C(mixed real) + D(imgsz 320) + B2(noise-only files) + A1(weak HSV)
+[2026-06-19 19:12:08] Real test holdout is used only by eval_per_size.py
+[2026-06-19 19:12:08] data_dir=/work/s473634/rareplanes-data/data
+[2026-06-19 19:12:08] smoke=False
+[2026-06-19 19:12:08] run_name=final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml
+[2026-06-19 19:12:08] synthetic_src=data/yolo/synthetic_aircraft
+[2026-06-19 19:12:08] noise_dataset=final_syn45k_b2_noise
+[2026-06-19 19:12:08] mixed_dataset=final_mixed_syn45k_noise_real25pct
+[2026-06-19 19:12:08] real_pct=25, noise_sigma=8.0
+[2026-06-19 19:12:08] model=yolov10n.pt, epochs=60, batch=64, workers=4
+[2026-06-19 19:12:08] device=0, imgsz=320, seed=42, cache=None
+[2026-06-19 19:12:08] hsv_h=0.015, hsv_s=0.4, hsv_v=0.3
+[2026-06-19 19:12:08] full_download_workers=32, min_full_synthetic_ratio=0.99
+[2026-06-19 19:12:08] skip_prepare=False, skip_noise=False, skip_make=False, skip_train=False, skip_eval=False, dry_run=False
+
+==============================================================================
+[2026-06-19 19:12:08] Prepare base data
+==============================================================================
+[2026-06-19 19:12:08] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/expC.py --prepare-only --data-dir /work/s473634/rareplanes-data/data --batch 64 --workers 4 --device 0 --imgsz 320 --seed 42
+
+==============================================================================
+[2026-06-19 19:12:08] START expC.py
+==============================================================================
+
+==============================================================================
+[2026-06-19 19:12:08] Plan
+==============================================================================
+[2026-06-19 19:12:08] data_dir=/work/s473634/rareplanes-data/data
+[2026-06-19 19:12:08] smoke=False
+[2026-06-19 19:12:08] download_workers=32
+[2026-06-19 19:12:08] batch=64, workers=4, imgsz=320, device=0
+[2026-06-19 19:12:08] model=yolov10n.pt, seed=42
+[2026-06-19 19:12:08] skip_download=False, skip_prepare=False, prepare_only=True
+[2026-06-19 19:12:08] dry_run=False
+
+==============================================================================
+[2026-06-19 19:12:08] Downloading annotations
+==============================================================================
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/real/annotations/instances_train_aircraft.json exists
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/real/annotations/instances_test_aircraft.json exists
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/synthetic/annotations/instances_train_aircraft.json exists
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/synthetic/annotations/instances_test_aircraft.json exists
+
+==============================================================================
+[2026-06-19 19:12:08] Downloading/extracting real train+test tiles
+==============================================================================
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/real/tarballs/train.tar.gz exists
+[2026-06-19 19:12:08] [skip] /work/s473634/rareplanes-data/data/real/tarballs/test.tar.gz exists
+[2026-06-19 19:12:09] [skip extract] real tiles already present: 8525
+
+==============================================================================
+[2026-06-19 19:12:09] Downloading synthetic 10k images
+==============================================================================
+[2026-06-19 19:12:09] synthetic files to check/download=11764
+[2026-06-19 19:12:09] synthetic progress 1000/11764 ok=1000
+[2026-06-19 19:12:09] synthetic progress 2000/11764 ok=2000
+[2026-06-19 19:12:09] synthetic progress 3000/11764 ok=3000
+[2026-06-19 19:12:09] synthetic progress 4000/11764 ok=4000
+[2026-06-19 19:12:09] synthetic progress 5000/11764 ok=5000
+[2026-06-19 19:12:09] synthetic progress 6000/11764 ok=6000
+[2026-06-19 19:12:09] synthetic progress 7000/11764 ok=7000
+[2026-06-19 19:12:09] synthetic progress 8000/11764 ok=8000
+[2026-06-19 19:12:09] synthetic progress 9000/11764 ok=9000
+[2026-06-19 19:12:09] synthetic progress 10000/11764 ok=10000
+[2026-06-19 19:12:09] synthetic progress 11000/11764 ok=11000
+[2026-06-19 19:12:09] synthetic progress 11764/11764 ok=11764
+[2026-06-19 19:12:10] synthetic selected_ok=11764/11764 minimum=11646
+
+==============================================================================
+[2026-06-19 19:12:10] Preparing YOLO datasets
+==============================================================================
+[2026-06-19 19:12:10] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/coco_to_yolo.py --domain synthetic --classes aircraft --val-frac 0.15 --seed 42
+[synthetic/aircraft] train=10000 val=1764 test=0
+  klasy (1): ['aircraft']
+  -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_aircraft/data.yaml
+[2026-06-19 19:13:18] [cmd done] elapsed=68.6s
+[2026-06-19 19:13:18] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/coco_to_yolo.py --domain real --classes aircraft --val-frac 0.15 --seed 42
+[real/aircraft] train=4943 val=872 test=2710
+  klasy (1): ['aircraft']
+  -> /work/s473634/rareplanes-domain-shift/data/yolo/real_aircraft/data.yaml
+[2026-06-19 19:14:00] [cmd done] elapsed=41.6s
+[2026-06-19 19:14:00] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_subset.py --n-train 10000 --name synthetic_10k --seed 42
+[synthetic_10k] train=10000 val=1764 -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_10k/data.yaml
+rozklad lotnisk (train):
+   Atlanta_Airport         : 684
+   Munich_Airport          : 677
+   Newark_Airport          : 677
+   Miami_Airport           : 676
+   SaltLakeCity_Airport    : 676
+   HongKong_Airport        : 673
+   Zhukovsky_Airport       : 673
+   Oulu_Airport            : 672
+   Basel_Airport           : 672
+   Unalaska_Airport        : 670
+   Geneva_Airport          : 670
+   Chicago_Airport         : 669
+   SeoulIncheon_Airport    : 666
+   London_Airport          : 665
+   LosAngeles_Airport      : 580
+[2026-06-19 19:14:39] [cmd done] elapsed=38.9s
+[2026-06-19 19:14:39] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_subset.py --n-train 1000 --name synthetic_1k --seed 42
+[synthetic_1k] train=1000 val=176 -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_1k/data.yaml
+rozklad lotnisk (train):
+   Atlanta_Airport         : 68
+   SaltLakeCity_Airport    : 68
+   Newark_Airport          : 68
+   Munich_Airport          : 68
+   Miami_Airport           : 68
+   SeoulIncheon_Airport    : 67
+   Geneva_Airport          : 67
+   Basel_Airport           : 67
+   HongKong_Airport        : 67
+   Zhukovsky_Airport       : 67
+   Unalaska_Airport        : 67
+   Chicago_Airport         : 67
+   Oulu_Airport            : 67
+   London_Airport          : 66
+   LosAngeles_Airport      : 58
+[2026-06-19 19:14:42] [cmd done] elapsed=3.6s
+
+==============================================================================
+[2026-06-19 19:14:42] DONE prepare-only
+==============================================================================
+[2026-06-19 19:14:42] [cmd done] elapsed=154.0s
+
+==============================================================================
+[2026-06-19 19:14:42] Prepare full synthetic training set
+==============================================================================
+[2026-06-19 19:14:44] synthetic train images from annotations=45000, present=11764, missing=33236
+[2026-06-19 19:15:55] synthetic full download progress 1000/45000 ok=1000
+[2026-06-19 19:17:03] synthetic full download progress 2000/45000 ok=2000
+[2026-06-19 19:18:01] synthetic full download progress 3000/45000 ok=3000
+[2026-06-19 19:19:05] synthetic full download progress 4000/45000 ok=4000
+[2026-06-19 19:20:02] synthetic full download progress 5000/45000 ok=5000
+[2026-06-19 19:21:15] synthetic full download progress 6000/45000 ok=6000
+[2026-06-19 19:22:14] synthetic full download progress 7000/45000 ok=7000
+[2026-06-19 19:23:20] synthetic full download progress 8000/45000 ok=8000
+[2026-06-19 19:24:23] synthetic full download progress 9000/45000 ok=9000
+[2026-06-19 19:25:26] synthetic full download progress 10000/45000 ok=10000
+[2026-06-19 19:26:32] synthetic full download progress 11000/45000 ok=11000
+[2026-06-19 19:27:36] synthetic full download progress 12000/45000 ok=12000
+[2026-06-19 19:28:40] synthetic full download progress 13000/45000 ok=13000
+[2026-06-19 19:29:47] synthetic full download progress 14000/45000 ok=14000
+[2026-06-19 19:30:49] synthetic full download progress 15000/45000 ok=15000
+[2026-06-19 19:31:49] synthetic full download progress 16000/45000 ok=16000
+[2026-06-19 19:33:08] synthetic full download progress 17000/45000 ok=17000
+[2026-06-19 19:34:11] synthetic full download progress 18000/45000 ok=18000
+[2026-06-19 19:35:21] synthetic full download progress 19000/45000 ok=19000
+[2026-06-19 19:36:29] synthetic full download progress 20000/45000 ok=20000
+[2026-06-19 19:37:32] synthetic full download progress 21000/45000 ok=21000
+[2026-06-19 19:38:38] synthetic full download progress 22000/45000 ok=22000
+[2026-06-19 19:39:40] synthetic full download progress 23000/45000 ok=23000
+[2026-06-19 19:40:43] synthetic full download progress 24000/45000 ok=24000
+[2026-06-19 19:41:43] synthetic full download progress 25000/45000 ok=25000
+[2026-06-19 19:42:56] synthetic full download progress 26000/45000 ok=26000
+[2026-06-19 19:43:57] synthetic full download progress 27000/45000 ok=27000
+[2026-06-19 19:44:59] synthetic full download progress 28000/45000 ok=28000
+[2026-06-19 19:46:02] synthetic full download progress 29000/45000 ok=29000
+[2026-06-19 19:47:13] synthetic full download progress 30000/45000 ok=30000
+[2026-06-19 19:48:15] synthetic full download progress 31000/45000 ok=31000
+[2026-06-19 19:49:27] synthetic full download progress 32000/45000 ok=32000
+[2026-06-19 19:50:25] synthetic full download progress 33000/45000 ok=33000
+[2026-06-19 19:51:26] synthetic full download progress 34000/45000 ok=34000
+[2026-06-19 19:52:19] synthetic full download progress 35000/45000 ok=35000
+[2026-06-19 19:53:21] synthetic full download progress 36000/45000 ok=36000
+[2026-06-19 19:54:21] synthetic full download progress 37000/45000 ok=37000
+[2026-06-19 19:55:27] synthetic full download progress 38000/45000 ok=38000
+[2026-06-19 19:56:24] synthetic full download progress 39000/45000 ok=39000
+[2026-06-19 19:58:19] synthetic full download progress 40000/45000 ok=40000
+[2026-06-19 19:59:23] synthetic full download progress 41000/45000 ok=41000
+[2026-06-19 20:00:14] synthetic full download progress 42000/45000 ok=42000
+[2026-06-19 20:01:27] synthetic full download progress 43000/45000 ok=43000
+[2026-06-19 20:02:32] synthetic full download progress 44000/45000 ok=44000
+[2026-06-19 20:03:33] synthetic full download progress 45000/45000 ok=45000
+[2026-06-19 20:03:46] synthetic full present=45000/45000 minimum=44550
+[2026-06-19 20:03:46] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/coco_to_yolo.py --domain synthetic --classes aircraft --val-frac 0.15 --seed 42
+[synthetic/aircraft] train=38250 val=6750 test=0
+  klasy (1): ['aircraft']
+  -> /work/s473634/rareplanes-domain-shift/data/yolo/synthetic_aircraft/data.yaml
+[2026-06-19 20:05:37] [cmd done] elapsed=111.6s
+
+==============================================================================
+[2026-06-19 20:05:37] Check required paths
+==============================================================================
+[2026-06-19 20:05:37] data/yolo/synthetic_aircraft/data.yaml [file] exists=True
+[2026-06-19 20:05:37] data/yolo/synthetic_aircraft/images/train [dir] exists=True
+[2026-06-19 20:05:37] data/yolo/synthetic_aircraft/images/val [dir] exists=True
+[2026-06-19 20:05:37] data/yolo/real_aircraft/data.yaml [file] exists=True
+[2026-06-19 20:05:37] data/yolo/real_aircraft/images/train [dir] exists=True
+[2026-06-19 20:05:37] data/yolo/real_aircraft/images/val [dir] exists=True
+[2026-06-19 20:05:37] data/real/PS-RGB_tiled/PS-RGB_tiled [dir] exists=True
+[2026-06-19 20:05:37] data/real/annotations/instances_test_aircraft.json [file] exists=True
+[2026-06-19 20:05:38] synthetic train PNG=38250
+[2026-06-19 20:05:38] synthetic val PNG=6750
+[2026-06-19 20:05:38] real train PNG=4943
+[2026-06-19 20:05:38] real val PNG=872
+[2026-06-19 20:05:38] real holdout PNG=8525
+[2026-06-19 20:05:39] full synthetic YOLO train+val=45000/45000 minimum=44550
+
+==============================================================================
+[2026-06-19 20:05:39] Apply experiment B2: materialized noise-only synthetic
+==============================================================================
+[2026-06-19 20:05:39] [cmd] /home/s473634/.conda/envs/rareplanes/bin/python src/make_frequency_degraded_dataset.py --src data/yolo/synthetic_aircraft --name final_syn45k_b2_noise --noise-sigma 8.0 --seed 42 --overwrite
+[start] src=/work/s473634/rareplanes-data/data/yolo/synthetic_aircraft
+[start] dst=/work/s473634/rareplanes-domain-shift/data/yolo/final_syn45k_b2_noise
+[start] blur_radius<=0.0 noise_sigma<=8.0 jpeg_quality_min=None
+[train] degradacja obrazow: 38250 -> /work/s473634/rareplanes-domain-shift/data/yolo/final_syn45k_b2_noise/images/train
+[train] 250/38250
+[train] 500/38250
+[train] 750/38250
+[train] 1000/38250
+[train] 1250/38250

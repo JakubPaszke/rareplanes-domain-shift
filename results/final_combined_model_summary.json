@@ -1,0 +1,75 @@
+{
+  "name": "final_yolov10n_syn1k_noise_real25pct_img320_hsvA1_ml",
+  "recipe": {
+    "architecture": "yolov10n.pt",
+    "synthetic_base": "data/yolo/synthetic_1k",
+    "synthetic_after_expB": "data/yolo/final_syn1k_b2_noise",
+    "mixed_dataset": "data/yolo/final_mixed_syn1k_noise_real25pct",
+    "real_fraction": 0.25,
+    "imgsz": 320,
+    "epochs": 3,
+    "batch": 32,
+    "seed": 42,
+    "noise_sigma": 8.0,
+    "hsv_h": 0.015,
+    "hsv_s": 0.4,
+    "hsv_v": 0.3
+  },
+  "motivation": {
+    "C": "mixed training was the strongest intervention in RAPORT.md",
+    "D": "imgsz=320 was best in the scale sweep",
+    "B": "noise-only helped; blur variants did not",
+    "A": "weak HSV was the best photometric setting"
+  },
+  "mixed_val_metrics": {
+    "mAP50": 0.7553645817039812,
+    "mAP50-95": 0.44736393911368716,
+    "precision": 0.8048556231603256,
+    "recall": 0.6705549539919982
+  },
+  "real_holdout_metrics": {
+    "AP@[.5:.95]": 0.5291094354053445,
+    "AP@.5": 0.8426166878840362,
+    "AP@.75": 0.6020864262718472,
+    "AP_small": 0.4391957631556732,
+    "AP_medium": 0.528561215571333,
+    "AP_large": 0.6621768620196321,
+    "AR@1": 0.2600998238402818,
+    "AR@10": 0.6286553141514972,
+    "AR@100": 0.7236347621843804,
+    "AR_small": 0.6331566548881036,
+    "AR_medium": 0.7209816303099885,
+    "AR_large": 0.823558282208589
+  },
+  "comparison": {
+    "best_measured_expC_25pct_img512": {
+      "AP@[.5:.95]": 0.7120271087490335,
+      "AP@.5": 0.9465769553819696,
+      "AP@.75": 0.84210936031103,
+      "AP_small": 0.6364900530746371,
+      "AP_medium": 0.697448578106969,
+      "AP_large": 0.8166136122161296,
+      "AR@1": 0.31379917792131534,
+      "AR@10": 0.7190399295361127,
+      "AR@100": 0.7822372284204345,
+      "AR_small": 0.7216136631330977,
+      "AR_medium": 0.7719575200918485,
+      "AR_large": 0.867361963190184
+    },
+    "real_to_real_upper_reference": {
+      "AP@[.5:.95]": 0.8072505241736603,
+      "AP@.5": 0.9737123688590739,
+      "AP@.75": 0.9146982087651043,
+      "AP_small": 0.7586041368854294,
+      "AP_medium": 0.7824586487400031,
+      "AP_large": 0.8991032043345685,
+      "AR@1": 0.3469759248385202,
+      "AR@10": 0.7895625366999413,
+      "AR@100": 0.8465355255431591,
+      "AR_small": 0.8064193168433451,
+      "AR_medium": 0.8260332950631458,
+      "AR_large": 0.9321472392638036
+    }
+  },
+  "benchmark": {}
+}
