@@ -27,9 +27,20 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def path_contains(parent, child):
-    parent_s = str(Path(parent).absolute())
-    child_s = str(Path(child).absolute())
-    return child_s == parent_s or child_s.startswith(parent_s.rstrip("/") + "/")
+    # cross-platform (Windows uzywa '\', nie '/'): porownaj przez relpath
+    try:
+        parent_p = Path(parent).resolve()
+        child_p = Path(child).resolve()
+    except OSError:
+        parent_p = Path(parent).absolute()
+        child_p = Path(child).absolute()
+    if parent_p == child_p:
+        return True
+    try:
+        child_p.relative_to(parent_p)
+        return True
+    except ValueError:
+        return False
 
 
 def degrade_bgr(img, rng, prob, blur_radius, noise_sigma, jpeg_quality_min):
@@ -73,23 +84,46 @@ def patch_cv2_imread(degrade_roots, seed, prob, blur_radius, noise_sigma, jpeg_q
     original_imread = cv2.imread
     counters = {"seen": 0, "degraded": 0}
 
-    def patched_imread(filename, flags=cv2.IMREAD_COLOR):
-        img = original_imread(filename, flags)
+    # Ultralytics >=8.3 czyta obrazy przez wlasna funkcje ultralytics.utils.patches.imread,
+    # NIE przez cv2.imread. Patchujemy OBA miejsca (cv2 dla zgodnosci wstecznej + ultralytics loader).
+    import ultralytics.data.base as _ult_base
+    try:
+        import ultralytics.utils.patches as _ult_patches
+    except Exception:
+        _ult_patches = None
+    orig_ult_imread = getattr(_ult_base, "imread", None)
+
+    def _maybe_degrade(img, filename):
         counters["seen"] += 1
         try:
-            should_degrade = any(path_contains(root, filename) for root in roots)
+            should = any(path_contains(root, filename) for root in roots)
         except TypeError:
-            should_degrade = False
-        if should_degrade:
+            should = False
+        if should and img is not None:
             counters["degraded"] += 1
             return degrade_bgr(img, rng, prob, blur_radius, noise_sigma, jpeg_quality_min)
         return img
 
+    def patched_imread(filename, flags=cv2.IMREAD_COLOR):
+        return _maybe_degrade(original_imread(filename, flags), filename)
+
+    def patched_ult_imread(filename, flags=cv2.IMREAD_COLOR):
+        img = orig_ult_imread(filename, flags) if orig_ult_imread else original_imread(filename, flags)
+        return _maybe_degrade(img, filename)
+
     cv2.imread = patched_imread
+    if orig_ult_imread is not None:
+        _ult_base.imread = patched_ult_imread
+        if _ult_patches is not None and hasattr(_ult_patches, "imread"):
+            _ult_patches.imread = patched_ult_imread
     try:
         yield counters
     finally:
         cv2.imread = original_imread
+        if orig_ult_imread is not None:
+            _ult_base.imread = orig_ult_imread
+            if _ult_patches is not None and hasattr(_ult_patches, "imread"):
+                _ult_patches.imread = orig_ult_imread
 
 
 def main():

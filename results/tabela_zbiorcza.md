@@ -13,5 +13,8 @@
 | Eksp D: imgsz 320 (10k) | 0.522 | 0.283 | 0.308 | 0.367 | 0.151 | 0.436 |
 | Eksp D: imgsz 768 (10k) | 0.448 | 0.252 | 0.230 | 0.339 | 0.116 | 0.374 |
 | Eksp D: imgsz 1024 (10k) | 0.330 | 0.190 | 0.222 | 0.250 | 0.047 | 0.284 |
+| Eksp B: sam szum (10k) | 0.490 | 0.280 | 0.283 | 0.382 | 0.119 | 0.435 |
+| Eksp B: rozmycie+szum (10k) | 0.451 | 0.259 | 0.261 | 0.358 | 0.101 | 0.400 |
+| Eksp B: rozmycie+szum+jpeg (10k) | 0.451 | 0.261 | 0.294 | 0.356 | 0.101 | 0.403 |
 
 *RT-DETR z best.pt po 2 epokach (trening rozbiezny, patrz notes/07)

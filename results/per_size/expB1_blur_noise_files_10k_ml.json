@@ -1,0 +1,21 @@
+{
+  "name": "expB1_blur_noise_files_10k_ml",
+  "weights": "C:\\rareplanes_win\\runs\\expB1_blur_noise_files_10k_ml\\weights\\best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 81266,
+  "metrics": {
+    "AP@[.5:.95]": 0.2585034193435347,
+    "AP@.5": 0.45149699234622276,
+    "AP@.75": 0.2655880243614094,
+    "AP_small": 0.261140637289769,
+    "AP_medium": 0.3578808647451354,
+    "AP_large": 0.10056210586456998,
+    "AR@1": 0.12326776277157958,
+    "AR@10": 0.32903699354081034,
+    "AR@100": 0.39988256018790375,
+    "AR_small": 0.5194935217903416,
+    "AR_medium": 0.4761481056257176,
+    "AR_large": 0.11226993865030672
+  }
+}

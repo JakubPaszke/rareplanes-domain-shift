@@ -92,7 +92,12 @@ def write_split(split, image_ids, images, anns, img_src_dir, out, link_imgs=True
         if link_imgs:
             if dst.exists() or dst.is_symlink():
                 dst.unlink()
-            os.symlink(src.resolve(), dst)
+            try:
+                os.symlink(src.resolve(), dst)
+            except OSError:
+                # Windows bez uprawnien do symlinkow -> kopiuj plik
+                import shutil
+                shutil.copy2(src.resolve(), dst)
         # label (pusty plik tez tworzymy -> negatywny przyklad)
         lines = yolo_lines(img, anns.get(iid, []))
         (lbl_out / (Path(fname).stem + ".txt")).write_text("\n".join(lines))

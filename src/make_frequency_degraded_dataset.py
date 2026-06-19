@@ -72,7 +72,12 @@ def link_label(src_label, dst_label):
     if dst_label.exists() or dst_label.is_symlink():
         dst_label.unlink()
     if src_label.exists():
-        os.symlink(src_label.resolve(), dst_label)
+        try:
+            os.symlink(src_label.resolve(), dst_label)
+        except OSError:
+            # Windows bez uprawnien do symlinkow -> kopiuj
+            import shutil
+            shutil.copy2(src_label.resolve(), dst_label)
     else:
         dst_label.write_text("")
 
