@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=12G
+#SBATCH --mem=24G
 #SBATCH --time=24:00:00
 #SBATCH --output=train-final-%j.out
 #SBATCH --error=train-final-%j.err

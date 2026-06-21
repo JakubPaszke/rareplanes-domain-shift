@@ -1,14 +1,14 @@
 {
-  "name": "final_yolov10n_syn1k_noise_real25pct_img320_hsvA1_ml",
+  "name": "final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml",
   "recipe": {
     "architecture": "yolov10n.pt",
-    "synthetic_base": "data/yolo/synthetic_1k",
-    "synthetic_after_expB": "data/yolo/final_syn1k_b2_noise",
-    "mixed_dataset": "data/yolo/final_mixed_syn1k_noise_real25pct",
+    "synthetic_base": "data/yolo/synthetic_aircraft",
+    "synthetic_after_expB": "data/yolo/final_syn45k_b2_noise",
+    "mixed_dataset": "data/yolo/final_mixed_syn45k_noise_real25pct",
     "real_fraction": 0.25,
     "imgsz": 320,
-    "epochs": 3,
-    "batch": 32,
+    "epochs": 60,
+    "batch": 64,
     "seed": 42,
     "noise_sigma": 8.0,
     "hsv_h": 0.015,
@@ -22,24 +22,24 @@
     "A": "weak HSV was the best photometric setting"
   },
   "mixed_val_metrics": {
-    "mAP50": 0.7553645817039812,
-    "mAP50-95": 0.44736393911368716,
-    "precision": 0.8048556231603256,
-    "recall": 0.6705549539919982
+    "mAP50": 0.9233723674713248,
+    "mAP50-95": 0.6959486817865035,
+    "precision": 0.9495009441855248,
+    "recall": 0.8657213008139262
   },
   "real_holdout_metrics": {
-    "AP@[.5:.95]": 0.5291094354053445,
-    "AP@.5": 0.8426166878840362,
-    "AP@.75": 0.6020864262718472,
-    "AP_small": 0.4391957631556732,
-    "AP_medium": 0.528561215571333,
-    "AP_large": 0.6621768620196321,
-    "AR@1": 0.2600998238402818,
-    "AR@10": 0.6286553141514972,
-    "AR@100": 0.7236347621843804,
-    "AR_small": 0.6331566548881036,
-    "AR_medium": 0.7209816303099885,
-    "AR_large": 0.823558282208589
+    "AP@[.5:.95]": 0.6332258559330259,
+    "AP@.5": 0.9030879154977324,
+    "AP@.75": 0.7459000043809982,
+    "AP_small": 0.5616054694010512,
+    "AP_medium": 0.6178800894767806,
+    "AP_large": 0.7522733071911054,
+    "AR@1": 0.2892248972401644,
+    "AR@10": 0.6745596007046389,
+    "AR@100": 0.7479594832648268,
+    "AR_small": 0.6670789163722026,
+    "AR_medium": 0.7430826636050517,
+    "AR_large": 0.842638036809816
   },
   "comparison": {
     "best_measured_expC_25pct_img512": {
@@ -71,5 +71,15 @@
       "AR_large": 0.9321472392638036
     }
   },
-  "benchmark": {}
+  "benchmark": {
+    "name": "final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml",
+    "weights": "runs/final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml/weights/best.pt",
+    "imgsz": 320,
+    "n_images": 256,
+    "elapsed_s": 2.539962304988876,
+    "fps": 100.78889733803399,
+    "batch": 32,
+    "device": "0",
+    "peak_cuda_memory_mb": 1340.7255859375
+  }
 }

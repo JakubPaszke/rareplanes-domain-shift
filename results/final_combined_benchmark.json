@@ -1,0 +1,11 @@
+{
+  "name": "final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml",
+  "weights": "runs/final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml/weights/best.pt",
+  "imgsz": 320,
+  "n_images": 256,
+  "elapsed_s": 2.539962304988876,
+  "fps": 100.78889733803399,
+  "batch": 32,
+  "device": "0",
+  "peak_cuda_memory_mb": 1340.7255859375
+}
