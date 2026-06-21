@@ -1,0 +1,21 @@
+% Ładne, czytelne tabele: booktabs + zebra-striping + pełna szerokość strony.
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+
+% Kolory zebry (delikatny szary co drugi wiersz).
+\definecolor{zebragray}{gray}{0.93}
+
+% Typy kolumn dla tabularx: L = lewa (rozciągliwa), R = prawa (rozciągliwa).
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% Gęste tabele metryk: nieco mniejsza czcionka, luźniejsze wiersze.
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+
+% Obrazy nie szersze niż tekst.
+\setkeys{Gin}{width=\linewidth,keepaspectratio}
