@@ -9,22 +9,6 @@ Projekt bada lukę domenową między syntetycznymi i rzeczywistymi zdjęciami sa
 
 Przetestowano cztery rodziny interwencji: fotometrię HSV, degradację częstotliwościową, mixed training z domieszką realnych obrazów oraz zmianę rozdzielczości wejścia. Najsilniejszy wynik dał eksperyment C: dodanie 25% dostępnego realnego train/val do 10k syntetyków, co odpowiadało około 11% realnych obrazów w zbiorze treningowym, podniosło wynik do `AP@.5=0.9466` i `AP@[.5:.95]=0.7120`. Model finalny 45k połączył decyzje B2+C+D+A1: szum `noise_sigma=8.0`, `real_frac=0.25`, `imgsz=320` i łagodne HSV `0.015/0.4/0.3`. Osiągnął `AP@.5=0.9031` oraz `AP@[.5:.95]=0.6332`, czyli bardzo poprawił czysty baseline synthetic 45k, ale nie przebił C 25% na 10k. Główny wniosek jest więc praktyczny: realne próbki działają jak kotwica domenowa silniej niż sama ekspansja syntetyki, a efekty dobrych decyzji nie sumują się liniowo.
 
-## Nota metodologiczna po krytyce planu
-
-W trakcie przygotowania raportu plan został skrytykowany za kilka uproszczeń. Ta wersja raportu przyjmuje te uwagi jako część metodologii, a nie jako przypis na końcu.
-
-Po pierwsze, głównym źródłem liczb w tabelach jest `results/per_size/*.json`, czyli ewaluacja COCO na rzeczywistym holdoucie testowym. Pliki `results/baselines/*.json` zawierają walidację Ultralytics/YOLO na zbiorach treningowych, syntetycznych lub mieszanych i służą tylko jako kontrola poprawności treningu. Nie należy mieszać `mAP50` z walidacji YOLO z `AP@.5` liczonym na realnym holdoucie.
-
-Po drugie, `results/tabela_zbiorcza.md` jest wygodnym zestawieniem roboczym, ale nie obejmuje modelu finalnego 45k i nie zawsze zawiera najpełniejszy komentarz metodologiczny. Dlatego wnioski liczbowe w raporcie oparto przede wszystkim na JSON-ach per-size, a interpretacje na notatkach `notes/`.
-
-Po trzecie, rodziny eksperymentów A/B/C/D i porównanie architektur nie tworzą jednego idealnie kontrolowanego eksperymentu. Różnią się liczbą obrazów, liczbą epok, `batch`, `imgsz`, sprzętem i reżimem danych. Raport traktuje ranking między rodzinami jako praktyczne porównanie skuteczności na realnym holdoucie, natomiast mocniejsze wnioski przyczynowe formułuje wewnątrz rodzin eksperymentów, np. B2 kontra B1/B3 albo C 1/5/10/25%.
-
-Po czwarte, nazwa `real25pct` nie oznacza, że 25% finalnego zbioru mieszanego to obrazy realne. Oznacza 25% dostępnego realnego train/val. W C 25% na 10k dawało to około 11% realnych obrazów w treningu, a w finalnym 45k tylko około 3.13%. Ta różnica jest kluczowa dla interpretacji, dlaczego finalny model 45k przegrał z C 25% 10k.
-
-Po piąte, raport uwzględnia `n_detections` przeliczone na detekcje na obraz. Samo AP nie pokazuje, że część modeli, szczególnie synthetic 45k i RT-DETR, generowała bardzo dużo kandydatów. Przy 2710 obrazach realnego holdoutu `813000` detekcji oznacza dokładnie `300.0` detekcji na obraz.
-
-Po szóste, Grad-CAM/EigenCAM jest analizą jakościową. Figura `results/gradcam/gradcam_comparison.png` służy do opisu wzorców uwagi, ale nie jest źródłem metryk tabelarycznych. Dla liczb używane są JSON-y w `results/per_size/`.
-
 ## Pytanie badawcze i hipotezy
 
 Dane syntetyczne są atrakcyjne w detekcji obiektów, bo pozwalają generować duże zbiory z pełnymi adnotacjami bez kosztownego ręcznego etykietowania. Ich problemem jest jednak luka domenowa: model dobrze dopasowany do renderów może gwałtownie tracić jakość na obrazach rzeczywistych. RarePlanes jest dobrym przypadkiem testowym, bo zawiera zarówno dane realne, jak i syntetyczne dla tego samego zadania: detekcji samolotów w kaflach satelitarnych.
@@ -47,6 +31,16 @@ Hipotezy projektu:
 | HArch | Architektura wpływa na odporność modelu na domain shift. | porównanie architektur |
 
 Wyniki odwróciły część intuicji. Szczególnie hipoteza HD została potwierdzona w kierunku przeciwnym do pierwotnej intuicji: nie większa, lecz mniejsza rozdzielczość `imgsz=320` poprawiła transfer.
+
+## Przegląd literatury
+
+Luka domenowa między danymi syntetycznymi a rzeczywistymi jest jednym z centralnych problemów uczenia z renderów. Klasyczne podejście *domain randomization* (Tobin i in., IROS 2017, arXiv:1703.06907) zakłada, że losowanie tekstur, oświetlenia i tła w symulacji zmusza model do uczenia się cech niezmienniczych względem domeny — przy dostatecznej zmienności symulacji rzeczywistość staje się dla modelu "kolejnym wariantem". Nasze eksperymenty A i B mieszczą się w tej rodzinie: HSV i degradacja częstotliwościowa to próby zasypania mierzalnych różnic fotometryczno-spektralnych między domenami. Nasze wyniki pokazują jednak, że taka korekta na poziomie obrazu domyka lukę tylko marginalnie (A1: `AP@.5=0.4591`, B2: `0.4897` wobec baseline `0.4525`).
+
+Drugą rodziną metod jest adaptacja przez domieszkę danych docelowych. Prace o *few-shot* i mieszanym treningu pokazują, że nawet niewielki udział realnych próbek silnie kotwiczy reprezentację w domenie docelowej — co w naszym projekcie potwierdza eksperyment C i czyni go najsilniejszą dźwignią (już 1% realnego splitu podnosi `AP@.5` z `0.4525` do `0.6666`). Jest to spójne z szerszą obserwacją z nurtu *data-centric*, że dobór danych treningowych bywa ważniejszy niż architektura: w naszych pomiarach zmiana składu danych dała `+0.49 AP@.5`, a zmiana architektury jedynie `+0.008`.
+
+Zbiór **RarePlanes** (Shermeyer i in., 2020, arXiv:2006.02963) został zaprojektowany właśnie do badania tej luki: dostarcza dane rzeczywiste (253 sceny Maxar WorldView-3, ~14,7 tys. ręcznie oznaczonych samolotów) oraz syntetyczne (~50 tys. obrazów z platformy AI.Reverie, ~600 tys. adnotacji), z bogatą semantyką ról i atrybutów. Oryginalna praca pokazała, że dodanie syntetyki do realnego treningu poprawia detekcję; nasz projekt zadaje pytanie odwrotne — jak daleko można zajść *zaczynając* od syntetyki i dokładając jak najmniej realnych danych.
+
+Po stronie architektur porównujemy jednostopniowe detektory CNN z rodziny YOLO (YOLOv10, Wang i in., NeurIPS 2024, arXiv:2405.14458) z detektorami transformerowymi typu DETR w wariancie czasu rzeczywistego (RT-DETR, Lv i in., 2023, arXiv:2304.08069). Co istotne dla naszej obserwacji, *obie* te architektury są end-to-end i rezygnują z NMS — YOLOv10 przez spójne podwójne przypisania w treningu, RT-DETR przez paradygmat predykcji zbioru z dopasowaniem węgierskim. Pozwala to wprost zbadać, czy brak NMS pomaga, czy szkodzi pod przesunięciem domeny: w naszych wynikach oba modele RT-DETR zwracają maksymalne 300 detekcji na obraz na realnym teście, co sugeruje, że mechanizm bez progu/NMS gorzej kalibruje się na obcej domenie. Do interpretowalności używamy EigenCAM (Muhammad i Yeasin, IJCNN 2020, arXiv:2008.00299) — wariantu opartego na głównych składowych aktywacji, który nie wymaga gradientu względem klasy, a więc lepiej pasuje do detektorów end-to-end niż klasyczny Grad-CAM.
 
 ## Dane RarePlanes i licencja
 
@@ -115,27 +109,29 @@ Główne metryki raportowe:
 - `AR@100`,
 - detekcje/obraz jako `n_detections / 2710`.
 
-Realny holdout testowy nie był używany do treningu ani do budowania mixed-val. Mixed-val i walidacja YOLO są pomocnicze; sednem projektu jest transfer na realny test.
+Realny holdout testowy nie był używany do treningu ani do budowania mixed-val. Wszystkie liczby w tabelach raportu pochodzą z ewaluacji COCO na tym holdoucie (`results/per_size/*.json`). Walidacja Ultralytics/YOLO na zbiorach treningowych (`results/baselines/*.json`) służyła wyłącznie jako kontrola poprawności treningu i nie jest tu raportowana jako miara transferu — jej `mAP50` liczone na danych syntetycznych lub mieszanych nie jest porównywalne z `AP@.5` na realnym teście. Oprócz AP raportujemy liczbę detekcji na obraz (`n_detections / 2710`), bo samo AP nie pokazuje, że niektóre modele — zwłaszcza synthetic 45k i RT-DETR — generują bardzo wielu kandydatów (do 300 na obraz), co jest sygnałem słabej kalibracji na obcej domenie.
 
-| Grupa wyników | Dane treningowe | Epoki | Batch | `imgsz` | Główne źródło metryk |
-|---|---|---:|---:|---:|---|
-| Real baseline | real train/val | 100 | 64 | 512 | `results/per_size/real_baseline.json` |
-| Synthetic 6460 | synthetic subset, 3 lotniska | 100 | 64 | 512 | `results/per_size/syn_to_real_baseline.json` |
-| Synthetic 45k | pełne synthetic 45k | 100 | 64 | 512 | `results/per_size/syn45k_to_real_baseline.json` |
-| A | synthetic 10k/45k + HSV | 60 / final 45k | różne | 512 | `results/per_size/expA*.json` |
-| B | synthetic 10k po degradacji plikowej | 60 | 32 | 512 | `results/per_size/expB*.json` |
-| C | synthetic 10k + real train/val | 30 | 32 | 512 | `results/per_size/expC*.json` |
-| D | synthetic 10k, sweep skali | 45 | 16 | 320/768/1024 | `results/per_size/expD*.json` |
-| Architektury | synthetic 10k | różne | różne | 512 | `results/per_size/yolo11l_*.json`, `rtdetr*.json` |
-| Final 45k | synthetic 45k B2 + real_frac 0.25 + A1 | 60 | 64 | 320 | `results/per_size/final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml.json` |
+| Grupa wyników | Dane treningowe | Epoki | Batch | `imgsz` |
+|---|---|---:|---:|---:|
+| Real baseline | real train/val | 100 | 64 | 512 |
+| Synthetic 6460 | synthetic subset, 3 lotniska | 100 | 64 | 512 |
+| Synthetic 45k | pełne synthetic 45k | 100 | 64 | 512 |
+| A | synthetic 10k/45k + HSV | 60 / final 45k | różne | 512 |
+| B | synthetic 10k po degradacji plikowej | 60 | 32 | 512 |
+| C | synthetic 10k + real train/val | 30 | 32 | 512 |
+| D | synthetic 10k, sweep skali | 45 | 16 | 320/768/1024 |
+| Architektury | synthetic 10k | różne | różne | 512 |
+| Final 45k | synthetic 45k B2 + real_frac 0.25 + A1 | 60 | 64 | 320 |
 
-Ta tabela jest ważna, bo chroni przed nadinterpretacją małych różnic między rodzinami. Część różnic to efekt metody, ale część może wynikać z harmonogramu treningowego, sprzętu albo skali danych.
+Źródła metryk dla każdej grupy to odpowiadające pliki `results/per_size/*.json` (spis w sekcji „Artefakty w repo").
+
+Rodziny eksperymentów A/B/C/D i porównanie architektur różnią się liczbą obrazów, epok, wartościami `batch` i `imgsz` oraz sprzętem. Dlatego ranking między rodzinami traktujemy jako praktyczne porównanie skuteczności na realnym holdoucie, a mocniejsze wnioski przyczynowe formułujemy wewnątrz pojedynczej rodziny, gdzie protokół jest stały — na przykład B2 wobec B1/B3 albo C 1/5/10/25%.
 
 ## Baseline'y
 
 Baseline real->real jest górnym punktem odniesienia: pokazuje, co potrafi YOLOv10n, gdy dane treningowe i testowe są z tej samej domeny. Baseline synthetic->real mierzy właściwą lukę domenową.
 
-| Model | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img |
+| Model | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Real baseline | 0.9737 | 0.8073 | 0.7586 | 0.7825 | 0.8991 | 0.8465 | 9.5 |
 | Synthetic 6460 | 0.4095 | 0.2388 | 0.2624 | 0.3284 | 0.0671 | 0.3686 | 33.8 |
@@ -151,7 +147,7 @@ Równocześnie synthetic 45k zwraca maksymalne `300.0` detekcji na obraz przy ew
 
 Eksperyment A sprawdzał, czy wzmocnienie augmentacji fotometrycznej ograniczy różnice kolorystyczne między synthetic i real. Testowano warianty HSV na 10k syntetyków oraz wariant A1 na pełniejszym treningu 45k.
 
-| Wariant | Opis | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 |
+| Wariant | Opis | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 |
 |---|---|---:|---:|---:|---:|---:|---:|
 | Synthetic 45k baseline | bez A1 | 0.4525 | 0.2683 | 0.2859 | 0.3839 | 0.2008 | 0.5459 |
 | A1 weak 10k | łagodne HSV | 0.4591 | 0.2643 | 0.3056 | 0.3571 | 0.0908 | 0.3970 |
@@ -167,7 +163,7 @@ Wniosek: HA jest potwierdzona słabo. Fotometria pomaga małym obiektom, ale nie
 
 Eksperyment B wynikał z analizy FFT: realne zdjęcia zawierały więcej wysokich częstotliwości niż gładkie syntetyki. Testowano degradacje materializowane do plików, a nie wersję on-the-fly, ponieważ wcześniejsze uruchomienie on-the-fly okazało się niewiarygodne i nie jest źródłem wyników raportowych.
 
-| Wariant | Degradacja | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img |
+| Wariant | Degradacja | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
 | B1 | blur + noise | 0.4515 | 0.2585 | 0.2611 | 0.3579 | 0.1006 | 0.3999 | 30.0 |
 | B2 | noise only, `sigma=8` | 0.4897 | 0.2797 | 0.2829 | 0.3821 | 0.1190 | 0.4353 | 44.2 |
@@ -181,7 +177,7 @@ Wniosek: HB jest potwierdzona częściowo. Pomaga dodanie szumu, nie pomaga rozm
 
 Eksperyment C jest najważniejszy jakościowo. Sprawdzał, jak dodanie części realnego train/val do syntetyki wpływa na transfer na realny holdout testowy.
 
-Najważniejsza pułapka interpretacyjna: `real_frac` oznacza procent dostępnego realnego splitu train/val, a nie procent finalnego zbioru mixed. Realny test nigdy nie był dodawany do treningu ani walidacji mixed.
+Warto doprecyzować, co oznacza `real_frac`: jest to procent dostępnego realnego splitu train/val dołączonego do syntetyki, a nie procent realnych obrazów w finalnym zbiorze mieszanym. Realny test nigdy nie był dodawany do treningu ani walidacji mixed.
 
 | Wariant | Train synthetic | Train real | Real share train | Val synthetic | Val real | Real share val |
 |---|---:|---:|---:|---:|---:|---:|
@@ -192,7 +188,7 @@ Najważniejsza pułapka interpretacyjna: `real_frac` oznacza procent dostępnego
 
 Wszystkie główne warianty C trenowano jako `YOLOv10n`, `epochs=30`, `batch=32`, `imgsz=512`, `workers=4`, `seed=42`, z domyślną augmentacją Ultralytics. C nie używał B2 ani A1; badał przede wszystkim skład danych.
 
-| Wariant | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img |
+| Wariant | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | C 1% | 0.6666 | 0.3957 | 0.3614 | 0.4535 | 0.3462 | 0.5954 | 66.5 |
 | C 5% | 0.8516 | 0.5660 | 0.5197 | 0.5761 | 0.6108 | 0.7144 | 39.4 |
@@ -207,7 +203,7 @@ C 25% zbliża się do real baseline w `AP@.5`: `0.9466` wobec `0.9737`. Nadal po
 
 Eksperyment D sprawdzał hipotezę skali. Pierwotna intuicja była taka, że większa rozdzielczość wejścia pomoże małym obiektom. Wynik był odwrotny: najlepsze okazało się `imgsz=320`.
 
-| `imgsz` | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img | Status |
+| `imgsz` | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img | Status |
 |---:|---:|---:|---:|---:|---:|---:|---:|---|
 | 320 | 0.5224 | 0.2828 | 0.3078 | 0.3675 | 0.1511 | 0.4358 | 54.2 | główny wariant D |
 | 512 | 0.4591 | 0.2643 | 0.3056 | 0.3571 | 0.0908 | 0.3970 | 27.4 | punkt referencyjny, nie osobny `expD_512_*` |
@@ -222,7 +218,7 @@ HD została więc potwierdzona odwrotnie: skala pomaga, ale przez zmniejszenie w
 
 Porównanie architektur sprawdzało, czy większy albo nowszy model lepiej zniesie domain shift. Wyniki nie potwierdziły prostej zależności "większy model = lepszy transfer".
 
-| Model | Typ | Parametry | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img |
+| Model | Typ | Parametry | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | YOLO11l | CNN | ok. 25M | 0.4670 | 0.2708 | 0.3061 | 0.3483 | 0.1081 | 0.3922 | 22.6 |
 | YOLOv10n | CNN | ok. 2.3M | 0.4591 | 0.2643 | 0.3056 | 0.3571 | 0.0908 | 0.3970 | 27.4 |
@@ -265,7 +261,7 @@ Szczegóły:
 
 | Element | Wartość |
 |---|---|
-| Run | `final_yolov10n_syn45k_noise_real25pct_img320_hsvA1_ml` |
+| Run | `final_yolov10n_syn45k_noise_` `real25pct_img320_hsvA1_ml` |
 | Architektura | `yolov10n.pt` |
 | Synthetic | pełne 45k, po B2 |
 | B2 | `noise_sigma=8.0`, `blur_radius=0.0`, `jpeg_quality_min=None` |
@@ -290,7 +286,7 @@ Ta tabela wyjaśnia główny paradoks finalnego modelu. Final używa pełnych 45
 
 Wyniki:
 
-| Model | AP@.5 | AP@[.5:.95] | AP_small | AP_medium | AP_large | AR@100 | Det/img |
+| Model | AP@.5 | AP@[.5:.95] | AP_S | AP_M | AP_L | AR@100 | Det/img |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Synthetic 45k baseline | 0.4525 | 0.2683 | 0.2859 | 0.3839 | 0.2008 | 0.5459 | 300.0 |
 | C 25% real 10k | 0.9466 | 0.7120 | 0.6365 | 0.6974 | 0.8166 | 0.7822 | 20.8 |
@@ -341,7 +337,7 @@ Najważniejszy wniosek naukowy: zwiększenie liczby syntetyków pomaga, ale nie 
 1. Większość eksperymentów wykonano dla jednego seeda (`42`). Małe różnice, zwłaszcza w A, mogą być porównywalne z wariancją treningu.
 2. Rodziny eksperymentów różnią się protokołem: C ma 30 epok i mixed data, D ma sweep skali, final ma 60 epok i 45k synthetic. Globalne porównania są praktyczne, nie w pełni przyczynowe.
 3. Część wyników liczono na różnych GPU i środowiskach. FPS-y między rodzinami nie powinny być porównywane bez wspólnego benchmarku.
-4. `real25pct` jest nazwą mylącą. Raport konsekwentnie interpretuje ją jako 25% dostępnego real train/val.
+4. Nazwę `real25pct` należy czytać jako 25% dostępnego real train/val, a nie jako udział realnych obrazów w finalnym zbiorze mieszanym.
 5. Mixed-val nie jest główną metryką. Wyniki mixed-val mogą być wysokie i nie dowodzą transferu na realny holdout.
 6. Grad-CAM/EigenCAM jest jakościowy. Nie należy z niego wyprowadzać liczbowych rankingów.
 7. Punkt `imgsz=512` w sekcji D jest referencją, a nie osobnym plikiem `expD_512_*`.
@@ -411,8 +407,6 @@ Pipeline finalny wykonuje przygotowanie danych, materializację B2, zbudowanie m
 
 | Artefakt | Rola |
 |---|---|
-| `docs/RAPORT.md` | szkic raportu v1 |
-| `docs/Raport_v2_plan.md` | plan i krytyka metodologiczna |
 | `notes/00_dane_i_licencja.md` | dane, licencja, warianty RarePlanes |
 | `notes/01_analiza_adnotacji.md` | rozmiary obiektów, gęstość, role |
 | `notes/02_analiza_wygladu.md` | kolor, histogramy, FFT |

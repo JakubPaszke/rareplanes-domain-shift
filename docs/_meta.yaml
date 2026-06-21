@@ -1,0 +1,17 @@
+---
+title: "Detekcja samolotów na zdjęciach satelitarnych pod przesunięciem domeny synthetic-to-real"
+subtitle: "Projekt 4 — Deep Learning / Computer Vision"
+author:
+  - Jakub Paszke
+  - Miłosz Rolewski
+date: "Czerwiec 2026"
+lang: pl
+mainfont: "Latin Modern Roman"
+monofont: "Latin Modern Mono"
+geometry: "margin=2.5cm"
+fontsize: 11pt
+linkcolor: blue
+urlcolor: blue
+toc: true
+toc-depth: 2
+---
