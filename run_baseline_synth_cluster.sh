@@ -44,6 +44,9 @@ CACHE="${CACHE:-}"
 PREPARE_YOLO="${PREPARE_YOLO:-1}"
 MIN_SYN_TRAIN="${MIN_SYN_TRAIN:-30000}"
 MIN_REAL_TEST="${MIN_REAL_TEST:-2500}"
+VALIDATE_IMAGES="${VALIDATE_IMAGES:-1}"
+VALIDATE_WORKERS="${VALIDATE_WORKERS:-8}"
+REPAIR_SYNTHETIC="${REPAIR_SYNTHETIC:-1}"
 
 RUN_ID="${SLURM_JOB_ID:-manual_$(date +%Y%m%d_%H%M%S)}"
 RUN_NAME="${RUN_NAME:-baseline_synth_45k_yolov10n_img${IMGSZ}_e${EPOCHS}_s${SEED}_${RUN_ID}}"
@@ -53,6 +56,8 @@ REAL_DATA="${REAL_DATA:-data/yolo/real_aircraft/data.yaml}"
 REAL_IMG_DIR="${REAL_IMG_DIR:-data/real/PS-RGB_tiled/PS-RGB_tiled}"
 REAL_COCO_GT="${REAL_COCO_GT:-data/real/annotations/instances_test_aircraft.json}"
 SYN_TRAIN_IMG_DIR="${SYN_TRAIN_IMG_DIR:-data/yolo/synthetic_aircraft/images/train}"
+SYN_SOURCE_IMG_DIR="${SYN_SOURCE_IMG_DIR:-data/synthetic/images/train}"
+SYN_REPAIR_URL_BASE="${SYN_REPAIR_URL_BASE:-https://rareplanes-public.s3.amazonaws.com/synthetic/train/images}"
 
 echo "HOST=$(hostname)"
 echo "REPO_DIR=${REPO_DIR}"
@@ -62,6 +67,7 @@ echo "MODEL=${MODEL}"
 echo "EPOCHS=${EPOCHS} BATCH=${BATCH} IMGSZ=${IMGSZ} SEED=${SEED}"
 echo "DEVICE=${DEVICE} WORKERS=${WORKERS} PATIENCE=${PATIENCE}"
 echo "MIN_SYN_TRAIN=${MIN_SYN_TRAIN} MIN_REAL_TEST=${MIN_REAL_TEST}"
+echo "VALIDATE_IMAGES=${VALIDATE_IMAGES} VALIDATE_WORKERS=${VALIDATE_WORKERS} REPAIR_SYNTHETIC=${REPAIR_SYNTHETIC}"
 echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-<unset>}"
 nvidia-smi
 
@@ -92,15 +98,15 @@ else
   echo "[prepare] pomijam COCO -> YOLO (PREPARE_YOLO=0)"
 fi
 
-for required in "${SYN_DATA}" "${REAL_DATA}" "${REAL_IMG_DIR}" "${REAL_COCO_GT}"; do
+for required in "${SYN_DATA}" "${REAL_DATA}" "${REAL_IMG_DIR}" "${REAL_COCO_GT}" "${SYN_TRAIN_IMG_DIR}"; do
   if [ ! -e "${required}" ]; then
     echo "[error] Brakuje wymaganego artefaktu: ${required}" >&2
     exit 1
   fi
 done
 
-SYN_TRAIN_COUNT="$(find "${SYN_TRAIN_IMG_DIR}" -maxdepth 1 -name '*.png' | wc -l)"
-REAL_TEST_COUNT="$(find "${REAL_IMG_DIR}" -maxdepth 1 -name '*.png' | wc -l)"
+SYN_TRAIN_COUNT="$(find -L "${SYN_TRAIN_IMG_DIR}" -maxdepth 1 -type f -name '*.png' | wc -l)"
+REAL_TEST_COUNT="$(find -L "${REAL_IMG_DIR}" -maxdepth 1 -type f -name '*.png' | wc -l)"
 echo "[check] synthetic train images=${SYN_TRAIN_COUNT}"
 echo "[check] real test images=${REAL_TEST_COUNT}"
 
@@ -114,6 +120,32 @@ if [ "${REAL_TEST_COUNT}" -lt "${MIN_REAL_TEST}" ]; then
   echo "[error] Za malo obrazow real test: ${REAL_TEST_COUNT} < ${MIN_REAL_TEST}" >&2
   echo "        Sprawdz data/real/PS-RGB_tiled/PS-RGB_tiled albo ustaw MIN_REAL_TEST." >&2
   exit 1
+fi
+
+if [ "${VALIDATE_IMAGES}" = "1" ]; then
+  echo "[check] validating synthetic YOLO images before training"
+  CHECK_CMD=(
+    python src/check_yolo_images.py
+    --dataset data/yolo/synthetic_aircraft
+    --splits train val
+    --workers "${VALIDATE_WORKERS}"
+    --write-bad-list "results/${RUN_NAME}_bad_synthetic_images.txt"
+  )
+
+  if [ "${REPAIR_SYNTHETIC}" = "1" ]; then
+    CHECK_CMD+=(
+      --repair
+      --repair-dir "${SYN_SOURCE_IMG_DIR}"
+      --url-base "${SYN_REPAIR_URL_BASE}"
+    )
+  fi
+
+  printf '[cmd]'
+  printf ' %q' "${CHECK_CMD[@]}"
+  printf '\n'
+  "${CHECK_CMD[@]}"
+else
+  echo "[check] pomijam walidacje obrazow (VALIDATE_IMAGES=0)"
 fi
 
 echo "[train] synthetic -> ${RUN_NAME}"
