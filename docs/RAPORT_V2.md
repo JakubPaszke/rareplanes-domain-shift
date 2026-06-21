@@ -141,6 +141,8 @@ Przejście z 6460 syntetyków do pełnych 45k pomaga, ale umiarkowanie: `AP@.5` 
 
 Równocześnie synthetic 45k zwraca maksymalne `300.0` detekcji na obraz przy ewaluacji z niskim progiem confidence. To sugeruje model mocno "rozgadany": poprawia recall, ale generuje bardzo dużo kandydatów. Ta obserwacja jest niewidoczna, jeśli patrzymy wyłącznie na AP.
 
+Skalę luki dobrze widać też na samej precyzji detektora. Ten sam model synthetic 45k na walidacji syntetycznej osiąga precyzję `P=0.98` i `mAP50=0.98`, natomiast na rzeczywistym holdoucie precyzja spada do `P≈0.64` (`mAP50≈0.39` w mierze Ultralytics). Rząd wielkości tego spadku — z ~98% do ~64% precyzji — jest zgodny z oczekiwaniem, że naiwny transfer z czystej syntetyki na zdjęcia rzeczywiste utrzymuje precyzję rzędu zaledwie ~60%. Dopiero domieszka realnych próbek (eksperyment C) i model finalny domykają tę różnicę.
+
 ![Analiza błędów synthetic vs real](../results/error_analysis_syn_vs_real.png)
 
 ## Eksperyment A: fotometria HSV
