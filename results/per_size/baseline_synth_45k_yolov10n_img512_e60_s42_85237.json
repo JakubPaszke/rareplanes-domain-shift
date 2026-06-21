@@ -1,0 +1,21 @@
+{
+  "name": "baseline_synth_45k_yolov10n_img512_e60_s42_85237",
+  "weights": "runs/baseline_synth_45k_yolov10n_img512_e60_s42_85237/weights/best.pt",
+  "coco_gt": "data/real/annotations/instances_test_aircraft.json",
+  "n_images": 2710,
+  "n_detections": 60257,
+  "metrics": {
+    "AP@[.5:.95]": 0.24514510166104167,
+    "AP@.5": 0.41043221718646233,
+    "AP@.75": 0.2668405780521283,
+    "AP_small": 0.3110830327485877,
+    "AP_medium": 0.3296529969505248,
+    "AP_large": 0.07685486768709567,
+    "AR@1": 0.10973282442748092,
+    "AR@10": 0.30638578978273634,
+    "AR@100": 0.37761303581914263,
+    "AR_small": 0.5343345111896348,
+    "AR_medium": 0.4398105625717566,
+    "AR_large": 0.08141104294478528
+  }
+}
